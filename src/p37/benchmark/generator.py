@@ -49,8 +49,8 @@ def _make(case_type: str, rng: random.Random, index: int) -> GroundTruthCase:
 
     base = datetime(2026, 8, 1, tzinfo=timezone.utc) + timedelta(hours=index)
     decision = base.isoformat()
-    lines = tuple(TrueLine(f"line_{index:05d}_{i}", transfers_amount[i], accounts[i], "goods") for i in range(n))
 
+    lines_list = [TrueLine(f"line_{index:05d}_{i}", transfers_amount[i], accounts[i], "goods") for i in range(n)]
     commission_treatment = "retained" if case_type == "C1_commission_retained" else "full" if case_type == "C2_commission_full_return" else "proportional"
     transfers = []
     for i, account in enumerate(accounts):
@@ -61,12 +61,22 @@ def _make(case_type: str, rng: random.Random, index: int) -> GroundTruthCase:
         transfers.append(TrueTransfer(f"tr_{index:05d}_{i}", account, amount, commission, (base-timedelta(hours=2)).isoformat(), (base+timedelta(hours=4)).isoformat(), commission_treatment, status, already))
     transfers = tuple(transfers)
 
+    if case_type == "A1_shipping_fee" and len(lines_list) > 1:
+        lines_list[-1] = TrueLine(lines_list[-1].line_id, lines_list[-1].line_amount_paise, lines_list[-1].true_fulfilling_account, "shipping")
+    elif case_type == "A4_platform_fee_only":
+        lines_list[0] = TrueLine(lines_list[0].line_id, lines_list[0].line_amount_paise, lines_list[0].true_fulfilling_account, "platform_fee")
+    elif case_type == "A3_discount_funded":
+        lines_list[0] = TrueLine(lines_list[0].line_id, lines_list[0].line_amount_paise, lines_list[0].true_fulfilling_account, "discount_adjustment")
+    elif case_type in {"C1_commission_retained", "C2_commission_full_return"}:
+        principal = max((gross // 5) - transfers[0].commission_component_paise, 1)
+        lines_list[0] = TrueLine(lines_list[0].line_id, principal, lines_list[0].true_fulfilling_account, "goods")
+    lines = tuple(lines_list)
+
     nonline = "proportional"
     if case_type == "A1_shipping_fee": nonline = "shipping_funder"
     elif case_type == "A2_goodwill_credit": nonline = "platform_absorbs"
     elif case_type == "A3_discount_funded": nonline = "discount_funder"
     elif case_type == "A4_platform_fee_only": nonline = "platform_fee_funder"
-
     agreement = AgreementTruth(
         {"goods":"fulfilling_vendor","shipping":"shipping_funder","platform_fee":"platform","discount_adjustment":"discount_funder"},
         nonline,
@@ -76,18 +86,11 @@ def _make(case_type: str, rng: random.Random, index: int) -> GroundTruthCase:
     if case_type == "D1_single_line_return":
         refund, coverage, reason = lines[0].line_amount_paise, ((lines[0].line_id, lines[0].line_amount_paise),), "return"
     elif case_type == "D2_multi_line_clean":
-        refund = sum(l.line_amount_paise for l in lines[:2])
-        coverage = tuple((l.line_id, l.line_amount_paise) for l in lines[:2])
-        reason = "return"
+        refund, coverage, reason = sum(l.line_amount_paise for l in lines[:2]), tuple((l.line_id, l.line_amount_paise) for l in lines[:2]), "return"
     elif case_type == "D3_full_refund":
         refund, coverage, reason = gross, tuple((l.line_id, l.line_amount_paise) for l in lines), "return"
-    elif case_type == "C1_commission_retained":
-        refund = min(gross//5, lines[0].line_amount_paise)
-        coverage, reason = ((lines[0].line_id, refund),), "return"
-    elif case_type == "C2_commission_full_return":
-        refund = min(gross//5, lines[0].line_amount_paise)
-        principal = max(refund - (transfers[0].commission_component_paise or 1), 1)
-        coverage, reason = ((lines[0].line_id, principal),), "return"
+    elif case_type in {"C1_commission_retained", "C2_commission_full_return"}:
+        refund, coverage, reason = gross//5, ((lines[0].line_id, lines[0].line_amount_paise),), "return"
     elif case_type == "N1_refund_exceeds_payment":
         refund, coverage, reason = gross+1, (), "invalid"
     elif case_type == "N2_refund_exceeds_transfers":
@@ -96,17 +99,19 @@ def _make(case_type: str, rng: random.Random, index: int) -> GroundTruthCase:
         refund, coverage, reason = gross//2, (), "cancellation"
     else:
         refund = max(gross//5, 100)
-        if case_type == "B2_exact_balance": refund = min(refund, transfers[0].transfer_amount_paise)
-        if case_type == "B3_one_paisa_short": refund = min(refund, transfers[0].transfer_amount_paise)
-        coverage = ()
-        reason = {"A1_shipping_fee":"shipping","A2_goodwill_credit":"goodwill","A3_discount_funded":"discount-reversal","A4_platform_fee_only":"platform-fee","B1_rounding":"goodwill","B2_exact_balance":"return","B3_one_paisa_short":"return","B4_prior_partial_reversal":"return","B5_zero_commission":"return","B6_single_transfer":"return","N3_closed_account":"return","N4_line_maps_to_multiple":"return","N5_reason_mislabelled":"return","C1_commission_retained":"return","C2_commission_full_return":"return"}.get(case_type, "goodwill")
+        if case_type in {"B2_exact_balance", "B3_one_paisa_short"}:
+            refund = min(refund, transfers[0].transfer_amount_paise)
+        coverage, reason = (), {"A1_shipping_fee":"shipping","A2_goodwill_credit":"goodwill","A3_discount_funded":"discount-reversal","A4_platform_fee_only":"platform-fee","B1_rounding":"goodwill","B2_exact_balance":"return","B3_one_paisa_short":"return","B4_prior_partial_reversal":"return","B5_zero_commission":"return","B6_single_transfer":"return","N3_closed_account":"return","N4_line_maps_to_multiple":"return","N5_reason_mislabelled":"return"}.get(case_type, "goodwill")
 
     funding = {"shipping": accounts[-1], "platform": accounts[0], "discount": accounts[-1]}
+    if case_type == "A5_proportional_cancellation":
+        agreement = AgreementTruth(agreement.principal_bearer_rule, "proportional", agreement.recovery_order)
+
     balances = {}
-    for i, t in enumerate(transfers):
+    for t in transfers:
         bal = max(t.transfer_amount_paise, refund)
-        if case_type == "B2_exact_balance" and i == 0: bal = refund
-        if case_type == "B3_one_paisa_short" and i == 0: bal = max(refund-1, 0)
+        if case_type == "B2_exact_balance" and t.linked_account_id == accounts[0]: bal = refund
+        if case_type == "B3_one_paisa_short" and t.linked_account_id == accounts[0]: bal = max(refund-1, 0)
         balances[t.linked_account_id] = ((decision, bal),)
 
     invalid = {"N1_refund_exceeds_payment":"refund_exceeds_payment","N2_refund_exceeds_transfers":"refund_exceeds_transfers","N3_closed_account":"account_not_active","N4_line_maps_to_multiple":"line_attribution_ambiguous","N5_reason_mislabelled":"reason_mislabelled"}.get(case_type)
