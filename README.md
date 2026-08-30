@@ -2,17 +2,28 @@
 
 Research-first prototype for the Razorpay AI Buildathon.
 
-This repository intentionally starts with a deterministic baseline. AI is not introduced until the validated hypothesis, data contract, and baseline establish where it creates measurable value.
+**Selected problem:** P37 — partial-refund allocation and clawback on split payments where contract-specific bearing rules can differ from proportional/default handling.
 
 ## Current milestone
 
-- Research pack captured in `research/`
-- Deterministic synthetic benchmark implemented
-- Baseline allocation/evaluation implemented
-- Automated tests and CI configuration included
+**Independent ground-truth benchmark.** The benchmark starts from hidden true transaction state, projects only predictor-visible inputs, and keeps the ground-truth resolver independent from any predictor.
+
+Implemented locally and being mirrored into this repository:
+
+- distinct `GroundTruthCase` / `ObservableCase` models
+- one-way projection boundary
+- deterministic true-state generator
+- integer-paise largest-remainder rounding
+- independent ground-truth resolver
+- adversarial leakage/boundary tests
+- reproducible seeded datasets
 
 ## Engineering principle
 
 > Problem → evidence → root cause → decision → hypothesis → baseline → AI necessity → implementation → evaluation.
 
-See `docs/PROJECT_STATUS.md` and `docs/NEXT_MILESTONE.md` for the current state.
+AI/LLM/agent components will be added only after the benchmark proves exactly where they add measurable value.
+
+## Research
+
+The research decision and benchmark specification are recorded under `research/` and `docs/`.
