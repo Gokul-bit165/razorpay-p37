@@ -1,0 +1,2295 @@
+{
+  "meta": {
+    "benchmark_version": "1.0",
+    "extraction_version": "0.1.0",
+    "val_config": {
+      "seed": 2701,
+      "counts": {
+        "D1_single_line_return": 20,
+        "D2_multi_line_clean": 20,
+        "D3_full_refund": 20,
+        "A1_shipping_fee": 20,
+        "A2_goodwill_credit": 20,
+        "A3_discount_funded": 20,
+        "A4_platform_fee_only": 20,
+        "A5_proportional_cancellation": 20,
+        "C1_commission_retained": 20,
+        "C2_commission_full_return": 20,
+        "B1_rounding": 20,
+        "B2_exact_balance": 20,
+        "B3_one_paisa_short": 20,
+        "B4_prior_partial_reversal": 20,
+        "B5_zero_commission": 20,
+        "B6_single_transfer": 20,
+        "N1_refund_exceeds_payment": 20,
+        "N2_refund_exceeds_transfers": 20,
+        "N3_closed_account": 20,
+        "N4_line_maps_to_multiple": 20,
+        "N5_reason_mislabelled": 20
+      }
+    },
+    "total_cases": 420,
+    "tier_b_clean_n": 12,
+    "safety_set_n": 5,
+    "rule_impact_cases_n": 5,
+    "timestamp": "2026-08-31T10:09:02.765197+00:00"
+  },
+  "regression_checks": {
+    "status": "PASS",
+    "r0_experiment_a_correct": 40,
+    "r0_experiment_a_total": 140,
+    "r1_experiment_a_correct": 120,
+    "r1_experiment_a_total": 140,
+    "equivalence_disagreements": 0,
+    "equivalence_resolvable_total": 320
+  },
+  "allocation": {
+    "R0": {
+      "total_cases": 420,
+      "resolvable_cases": 320,
+      "invalid_cases": 100,
+      "experiment_a_subset": 140,
+      "exact_all": 280,
+      "exact_rate_all": 0.666667,
+      "exact_subset": 40,
+      "exact_rate_subset": 0.285714,
+      "false_on_invalid": 60,
+      "false_on_invalid_rate": 0.6,
+      "mae_paise": 1800.0024,
+      "total_misallocated_paise": 756001,
+      "by_case_type": {
+        "A1_shipping_fee": {
+          "correct": 0,
+          "total": 20,
+          "rate": 0.0
+        },
+        "A2_goodwill_credit": {
+          "correct": 0,
+          "total": 20,
+          "rate": 0.0
+        },
+        "A3_discount_funded": {
+          "correct": 0,
+          "total": 20,
+          "rate": 0.0
+        },
+        "A4_platform_fee_only": {
+          "correct": 0,
+          "total": 20,
+          "rate": 0.0
+        },
+        "A5_proportional_cancellation": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "B1_rounding": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "B2_exact_balance": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "B3_one_paisa_short": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "B4_prior_partial_reversal": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "B5_zero_commission": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "B6_single_transfer": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "C1_commission_retained": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "C2_commission_full_return": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "D1_single_line_return": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "D2_multi_line_clean": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "D3_full_refund": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "N1_refund_exceeds_payment": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "N2_refund_exceeds_transfers": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "N3_closed_account": {
+          "correct": 0,
+          "total": 20,
+          "rate": 0.0
+        },
+        "N4_line_maps_to_multiple": {
+          "correct": 0,
+          "total": 20,
+          "rate": 0.0
+        },
+        "N5_reason_mislabelled": {
+          "correct": 0,
+          "total": 20,
+          "rate": 0.0
+        }
+      }
+    },
+    "R1": {
+      "total_cases": 420,
+      "resolvable_cases": 320,
+      "invalid_cases": 100,
+      "experiment_a_subset": 140,
+      "exact_all": 360,
+      "exact_rate_all": 0.857143,
+      "exact_subset": 120,
+      "exact_rate_subset": 0.857143,
+      "false_on_invalid": 60,
+      "false_on_invalid_rate": 0.6,
+      "mae_paise": 769.0476,
+      "total_misallocated_paise": 323000,
+      "by_case_type": {
+        "A1_shipping_fee": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "A2_goodwill_credit": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "A3_discount_funded": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "A4_platform_fee_only": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "A5_proportional_cancellation": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "B1_rounding": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "B2_exact_balance": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "B3_one_paisa_short": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "B4_prior_partial_reversal": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "B5_zero_commission": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "B6_single_transfer": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "C1_commission_retained": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "C2_commission_full_return": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "D1_single_line_return": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "D2_multi_line_clean": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "D3_full_refund": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "N1_refund_exceeds_payment": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "N2_refund_exceeds_transfers": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "N3_closed_account": {
+          "correct": 0,
+          "total": 20,
+          "rate": 0.0
+        },
+        "N4_line_maps_to_multiple": {
+          "correct": 0,
+          "total": 20,
+          "rate": 0.0
+        },
+        "N5_reason_mislabelled": {
+          "correct": 0,
+          "total": 20,
+          "rate": 0.0
+        }
+      }
+    },
+    "R2": {
+      "total_cases": 420,
+      "resolvable_cases": 320,
+      "invalid_cases": 100,
+      "experiment_a_subset": 140,
+      "exact_all": 280,
+      "exact_rate_all": 0.666667,
+      "exact_subset": 40,
+      "exact_rate_subset": 0.285714,
+      "false_on_invalid": 60,
+      "false_on_invalid_rate": 0.6,
+      "mae_paise": 1687.2071,
+      "total_misallocated_paise": 708627,
+      "by_case_type": {
+        "A1_shipping_fee": {
+          "correct": 0,
+          "total": 20,
+          "rate": 0.0
+        },
+        "A2_goodwill_credit": {
+          "correct": 0,
+          "total": 20,
+          "rate": 0.0
+        },
+        "A3_discount_funded": {
+          "correct": 0,
+          "total": 20,
+          "rate": 0.0
+        },
+        "A4_platform_fee_only": {
+          "correct": 0,
+          "total": 20,
+          "rate": 0.0
+        },
+        "A5_proportional_cancellation": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "B1_rounding": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "B2_exact_balance": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "B3_one_paisa_short": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "B4_prior_partial_reversal": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "B5_zero_commission": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "B6_single_transfer": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "C1_commission_retained": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "C2_commission_full_return": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "D1_single_line_return": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "D2_multi_line_clean": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "D3_full_refund": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "N1_refund_exceeds_payment": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "N2_refund_exceeds_transfers": {
+          "correct": 20,
+          "total": 20,
+          "rate": 1.0
+        },
+        "N3_closed_account": {
+          "correct": 0,
+          "total": 20,
+          "rate": 0.0
+        },
+        "N4_line_maps_to_multiple": {
+          "correct": 0,
+          "total": 20,
+          "rate": 0.0
+        },
+        "N5_reason_mislabelled": {
+          "correct": 0,
+          "total": 20,
+          "rate": 0.0
+        }
+      }
+    }
+  },
+  "financial_impact": {
+    "experiment_a_subset_n": 140,
+    "r0_correct": 40,
+    "r1_correct": 120,
+    "r2_correct": 40,
+    "r0_rate": 0.285714,
+    "r1_rate": 0.857143,
+    "r2_rate": 0.285714,
+    "r1_minus_r0": 0.571429,
+    "r2_minus_r0": 0.0,
+    "r1_minus_r2": 0.571429
+  },
+  "extraction": {
+    "tier_b_clean": {
+      "n_clauses": 12,
+      "n_with_known_nonline": 12,
+      "n_with_known_commission": 5,
+      "nonline_correct": 12,
+      "nonline_accuracy": 1.0,
+      "nonline_unknown_rate": 0.0,
+      "nonline_wrong_rate": 0.0,
+      "commission_correct": 5,
+      "commission_accuracy": 1.0,
+      "commission_unknown_rate": 0.0,
+      "commission_wrong_rate": 0.0,
+      "recovery_parsed_rate": 1.0,
+      "full_rule_exact_match": 12,
+      "full_rule_exact_rate": 1.0,
+      "abstention_rate": 0.0,
+      "invalid_output_rate": 0.0,
+      "source_spans_valid": 29,
+      "source_spans_total": 29,
+      "source_span_valid_rate": 1.0
+    },
+    "safety_set": {
+      "n_clauses": 5,
+      "n_expected_abstain": 1,
+      "n_expected_no_abstain": 4,
+      "abstained_when_expected": 1,
+      "abstention_on_safety_rate": 1.0,
+      "abstained_when_not_expected": 0,
+      "hallucinated_nonline": 0,
+      "hallucinated_commission": 0,
+      "hallucination_rate": 0.0
+    }
+  },
+  "rule_impact": {
+    "cases": [
+      {
+        "case_id": "ri_nl_1a",
+        "linked_validation_case_id": "case_000140",
+        "impact_demonstrable": true,
+        "rule_changes_allocation": false,
+        "oracle_bear": {
+          "acc_platform_ri": 1200,
+          "acc_vendor_ri": 800
+        },
+        "r0_default_bear": {
+          "acc_platform_ri": 1200,
+          "acc_vendor_ri": 800
+        }
+      },
+      {
+        "case_id": "ri_nl_1b",
+        "linked_validation_case_id": "case_000060",
+        "impact_demonstrable": true,
+        "rule_changes_allocation": true,
+        "oracle_bear": {
+          "acc_vendor_ri": 2000
+        },
+        "r0_default_bear": {
+          "acc_platform_ri": 1200,
+          "acc_vendor_ri": 800
+        }
+      },
+      {
+        "case_id": "ri_nl_2",
+        "linked_validation_case_id": "case_000060",
+        "impact_demonstrable": false,
+        "structural_limitation": "Extractor correctly identifies NonlineAllocation.shipping_funder from text, but cannot determine which account IS the shipping funder because the agreement text does not name it (only says 'shipping funder'). Allocator returns abstain=True (funding_map_unavailable). This is an observability gap, not an extraction failure. An LLM cannot close this gap either \u2014 the information is simply absent."
+      },
+      {
+        "case_id": "ri_comm_unit",
+        "linked_validation_case_id": "case_000160",
+        "impact_demonstrable": false,
+        "structural_limitation": "The observable predictor always sets sum(principal) = refund_amount via largest_remainder(), so residual_for_commission = 0 always. Commission treatment therefore has zero allocation impact in the observable predictor. Unit test (test_commission_unit_math) validates the allocator commission math directly with principal < refund_amount. This is a structural proxy constraint, not an extraction gap."
+      },
+      {
+        "case_id": "ri_recov_neg",
+        "linked_validation_case_id": "case_000000",
+        "impact_demonstrable": false,
+        "structural_limitation": "Recovery order is allocation-inert in this model. Forward order ('acc_platform_ri', 'acc_vendor_ri'): {'acc_platform_ri': 1200, 'acc_vendor_ri': 800}. Reversed order ('acc_vendor_ri', 'acc_platform_ri'): {'acc_platform_ri': 1200, 'acc_vendor_ri': 800}. Per-account amounts are identical (proved: each account draws from its own independent balance_snapshot, not a shared pool). Recovery order extraction is a valid rule-level metric but has zero allocation impact in the current allocator design."
+      }
+    ]
+  },
+  "r2_error_analysis": {
+    "total_failures": 140,
+    "by_error_type": {
+      "false_allocation_on_invalid": 60,
+      "wrong_abstain:funding_map_unavailable": 80
+    },
+    "failure_details": [
+      {
+        "case_id": "case_000060",
+        "case_type": "A1_shipping_fee",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00060_1": 6000
+        },
+        "abstained": true,
+        "nonline": "shipping_funder",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000061",
+        "case_type": "A1_shipping_fee",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00061_1": 3000
+        },
+        "abstained": true,
+        "nonline": "shipping_funder",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000062",
+        "case_type": "A1_shipping_fee",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00062_1": 2000
+        },
+        "abstained": true,
+        "nonline": "shipping_funder",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000063",
+        "case_type": "A1_shipping_fee",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00063_2": 4000
+        },
+        "abstained": true,
+        "nonline": "shipping_funder",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000064",
+        "case_type": "A1_shipping_fee",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00064_1": 4000
+        },
+        "abstained": true,
+        "nonline": "shipping_funder",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000065",
+        "case_type": "A1_shipping_fee",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00065_2": 4000
+        },
+        "abstained": true,
+        "nonline": "shipping_funder",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000066",
+        "case_type": "A1_shipping_fee",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00066_2": 9679
+        },
+        "abstained": true,
+        "nonline": "shipping_funder",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000067",
+        "case_type": "A1_shipping_fee",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00067_2": 10000
+        },
+        "abstained": true,
+        "nonline": "shipping_funder",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000068",
+        "case_type": "A1_shipping_fee",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00068_1": 4000
+        },
+        "abstained": true,
+        "nonline": "shipping_funder",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000069",
+        "case_type": "A1_shipping_fee",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00069_1": 10000
+        },
+        "abstained": true,
+        "nonline": "shipping_funder",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000070",
+        "case_type": "A1_shipping_fee",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00070_1": 3000
+        },
+        "abstained": true,
+        "nonline": "shipping_funder",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000071",
+        "case_type": "A1_shipping_fee",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00071_1": 2000
+        },
+        "abstained": true,
+        "nonline": "shipping_funder",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000072",
+        "case_type": "A1_shipping_fee",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00072_1": 10000
+        },
+        "abstained": true,
+        "nonline": "shipping_funder",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000073",
+        "case_type": "A1_shipping_fee",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00073_1": 6000
+        },
+        "abstained": true,
+        "nonline": "shipping_funder",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000074",
+        "case_type": "A1_shipping_fee",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00074_1": 4000
+        },
+        "abstained": true,
+        "nonline": "shipping_funder",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000075",
+        "case_type": "A1_shipping_fee",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00075_2": 2000
+        },
+        "abstained": true,
+        "nonline": "shipping_funder",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000076",
+        "case_type": "A1_shipping_fee",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00076_1": 10000
+        },
+        "abstained": true,
+        "nonline": "shipping_funder",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000077",
+        "case_type": "A1_shipping_fee",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00077_1": 2000
+        },
+        "abstained": true,
+        "nonline": "shipping_funder",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000078",
+        "case_type": "A1_shipping_fee",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00078_1": 2000
+        },
+        "abstained": true,
+        "nonline": "shipping_funder",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000079",
+        "case_type": "A1_shipping_fee",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00079_1": 10000
+        },
+        "abstained": true,
+        "nonline": "shipping_funder",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000080",
+        "case_type": "A2_goodwill_credit",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00080_0": 4000
+        },
+        "abstained": true,
+        "nonline": "platform_absorbs",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000081",
+        "case_type": "A2_goodwill_credit",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00081_0": 10000
+        },
+        "abstained": true,
+        "nonline": "platform_absorbs",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000082",
+        "case_type": "A2_goodwill_credit",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00082_0": 3000
+        },
+        "abstained": true,
+        "nonline": "platform_absorbs",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000083",
+        "case_type": "A2_goodwill_credit",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00083_0": 4000
+        },
+        "abstained": true,
+        "nonline": "platform_absorbs",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000084",
+        "case_type": "A2_goodwill_credit",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00084_0": 4000
+        },
+        "abstained": true,
+        "nonline": "platform_absorbs",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000085",
+        "case_type": "A2_goodwill_credit",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00085_0": 6000
+        },
+        "abstained": true,
+        "nonline": "platform_absorbs",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000086",
+        "case_type": "A2_goodwill_credit",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00086_0": 2000
+        },
+        "abstained": true,
+        "nonline": "platform_absorbs",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000087",
+        "case_type": "A2_goodwill_credit",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00087_0": 6000
+        },
+        "abstained": true,
+        "nonline": "platform_absorbs",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000088",
+        "case_type": "A2_goodwill_credit",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00088_0": 6000
+        },
+        "abstained": true,
+        "nonline": "platform_absorbs",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000089",
+        "case_type": "A2_goodwill_credit",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00089_0": 3000
+        },
+        "abstained": true,
+        "nonline": "platform_absorbs",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000090",
+        "case_type": "A2_goodwill_credit",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00090_0": 2000
+        },
+        "abstained": true,
+        "nonline": "platform_absorbs",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000091",
+        "case_type": "A2_goodwill_credit",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00091_0": 6000
+        },
+        "abstained": true,
+        "nonline": "platform_absorbs",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000092",
+        "case_type": "A2_goodwill_credit",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00092_0": 6000
+        },
+        "abstained": true,
+        "nonline": "platform_absorbs",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000093",
+        "case_type": "A2_goodwill_credit",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00093_0": 4000
+        },
+        "abstained": true,
+        "nonline": "platform_absorbs",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000094",
+        "case_type": "A2_goodwill_credit",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00094_0": 4000
+        },
+        "abstained": true,
+        "nonline": "platform_absorbs",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000095",
+        "case_type": "A2_goodwill_credit",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00095_0": 4000
+        },
+        "abstained": true,
+        "nonline": "platform_absorbs",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000096",
+        "case_type": "A2_goodwill_credit",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00096_0": 10000
+        },
+        "abstained": true,
+        "nonline": "platform_absorbs",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000097",
+        "case_type": "A2_goodwill_credit",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00097_0": 3000
+        },
+        "abstained": true,
+        "nonline": "platform_absorbs",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000098",
+        "case_type": "A2_goodwill_credit",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00098_0": 3000
+        },
+        "abstained": true,
+        "nonline": "platform_absorbs",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000099",
+        "case_type": "A2_goodwill_credit",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00099_0": 10000
+        },
+        "abstained": true,
+        "nonline": "platform_absorbs",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000100",
+        "case_type": "A3_discount_funded",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00100_1": 3000
+        },
+        "abstained": true,
+        "nonline": "discount_funder",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000101",
+        "case_type": "A3_discount_funded",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00101_1": 6000
+        },
+        "abstained": true,
+        "nonline": "discount_funder",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000102",
+        "case_type": "A3_discount_funded",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00102_1": 3000
+        },
+        "abstained": true,
+        "nonline": "discount_funder",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000103",
+        "case_type": "A3_discount_funded",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00103_1": 10000
+        },
+        "abstained": true,
+        "nonline": "discount_funder",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000104",
+        "case_type": "A3_discount_funded",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00104_2": 4000
+        },
+        "abstained": true,
+        "nonline": "discount_funder",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000105",
+        "case_type": "A3_discount_funded",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00105_2": 2486
+        },
+        "abstained": true,
+        "nonline": "discount_funder",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000106",
+        "case_type": "A3_discount_funded",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00106_1": 4000
+        },
+        "abstained": true,
+        "nonline": "discount_funder",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000107",
+        "case_type": "A3_discount_funded",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00107_2": 6000
+        },
+        "abstained": true,
+        "nonline": "discount_funder",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000108",
+        "case_type": "A3_discount_funded",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00108_1": 6000
+        },
+        "abstained": true,
+        "nonline": "discount_funder",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000109",
+        "case_type": "A3_discount_funded",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00109_1": 2000
+        },
+        "abstained": true,
+        "nonline": "discount_funder",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000110",
+        "case_type": "A3_discount_funded",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00110_2": 6000
+        },
+        "abstained": true,
+        "nonline": "discount_funder",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000111",
+        "case_type": "A3_discount_funded",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00111_2": 3000
+        },
+        "abstained": true,
+        "nonline": "discount_funder",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000112",
+        "case_type": "A3_discount_funded",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00112_1": 10000
+        },
+        "abstained": true,
+        "nonline": "discount_funder",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000113",
+        "case_type": "A3_discount_funded",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00113_2": 3000
+        },
+        "abstained": true,
+        "nonline": "discount_funder",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000114",
+        "case_type": "A3_discount_funded",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00114_2": 2000
+        },
+        "abstained": true,
+        "nonline": "discount_funder",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000115",
+        "case_type": "A3_discount_funded",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00115_1": 3000
+        },
+        "abstained": true,
+        "nonline": "discount_funder",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000116",
+        "case_type": "A3_discount_funded",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00116_2": 6000
+        },
+        "abstained": true,
+        "nonline": "discount_funder",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000117",
+        "case_type": "A3_discount_funded",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00117_2": 2000
+        },
+        "abstained": true,
+        "nonline": "discount_funder",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000118",
+        "case_type": "A3_discount_funded",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00118_2": 3000
+        },
+        "abstained": true,
+        "nonline": "discount_funder",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000119",
+        "case_type": "A3_discount_funded",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00119_1": 4000
+        },
+        "abstained": true,
+        "nonline": "discount_funder",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000120",
+        "case_type": "A4_platform_fee_only",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00120_0": 10000
+        },
+        "abstained": true,
+        "nonline": "platform_absorbs",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000121",
+        "case_type": "A4_platform_fee_only",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00121_0": 6000
+        },
+        "abstained": true,
+        "nonline": "platform_absorbs",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000122",
+        "case_type": "A4_platform_fee_only",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00122_0": 4000
+        },
+        "abstained": true,
+        "nonline": "platform_absorbs",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000123",
+        "case_type": "A4_platform_fee_only",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00123_0": 3000
+        },
+        "abstained": true,
+        "nonline": "platform_absorbs",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000124",
+        "case_type": "A4_platform_fee_only",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00124_0": 2000
+        },
+        "abstained": true,
+        "nonline": "platform_absorbs",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000125",
+        "case_type": "A4_platform_fee_only",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00125_0": 2000
+        },
+        "abstained": true,
+        "nonline": "platform_absorbs",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000126",
+        "case_type": "A4_platform_fee_only",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00126_0": 3000
+        },
+        "abstained": true,
+        "nonline": "platform_absorbs",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000127",
+        "case_type": "A4_platform_fee_only",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00127_0": 7627
+        },
+        "abstained": true,
+        "nonline": "platform_absorbs",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000128",
+        "case_type": "A4_platform_fee_only",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00128_0": 4000
+        },
+        "abstained": true,
+        "nonline": "platform_absorbs",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000129",
+        "case_type": "A4_platform_fee_only",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00129_0": 3000
+        },
+        "abstained": true,
+        "nonline": "platform_absorbs",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000130",
+        "case_type": "A4_platform_fee_only",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00130_0": 3000
+        },
+        "abstained": true,
+        "nonline": "platform_absorbs",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000131",
+        "case_type": "A4_platform_fee_only",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00131_0": 7835
+        },
+        "abstained": true,
+        "nonline": "platform_absorbs",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000132",
+        "case_type": "A4_platform_fee_only",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00132_0": 10000
+        },
+        "abstained": true,
+        "nonline": "platform_absorbs",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000133",
+        "case_type": "A4_platform_fee_only",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00133_0": 2000
+        },
+        "abstained": true,
+        "nonline": "platform_absorbs",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000134",
+        "case_type": "A4_platform_fee_only",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00134_0": 3000
+        },
+        "abstained": true,
+        "nonline": "platform_absorbs",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000135",
+        "case_type": "A4_platform_fee_only",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00135_0": 3000
+        },
+        "abstained": true,
+        "nonline": "platform_absorbs",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000136",
+        "case_type": "A4_platform_fee_only",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00136_0": 4000
+        },
+        "abstained": true,
+        "nonline": "platform_absorbs",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000137",
+        "case_type": "A4_platform_fee_only",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00137_0": 2000
+        },
+        "abstained": true,
+        "nonline": "platform_absorbs",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000138",
+        "case_type": "A4_platform_fee_only",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00138_0": 4000
+        },
+        "abstained": true,
+        "nonline": "platform_absorbs",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000139",
+        "case_type": "A4_platform_fee_only",
+        "error_type": "wrong_abstain:funding_map_unavailable",
+        "pred_bear": {},
+        "truth_bear": {
+          "acc_00139_0": 6000
+        },
+        "abstained": true,
+        "nonline": "platform_absorbs",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000360",
+        "case_type": "N3_closed_account",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00360_0": 5040,
+          "acc_00360_1": 4960
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000361",
+        "case_type": "N3_closed_account",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00361_0": 1605,
+          "acc_00361_1": 1452,
+          "acc_00361_2": 2943
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000362",
+        "case_type": "N3_closed_account",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00362_0": 1394,
+          "acc_00362_1": 1120,
+          "acc_00362_2": 486
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000363",
+        "case_type": "N3_closed_account",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00363_0": 772,
+          "acc_00363_1": 1228
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000364",
+        "case_type": "N3_closed_account",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00364_0": 1078,
+          "acc_00364_1": 1922
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000365",
+        "case_type": "N3_closed_account",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00365_0": 1841,
+          "acc_00365_1": 2159
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000366",
+        "case_type": "N3_closed_account",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00366_0": 1904,
+          "acc_00366_1": 4096
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000367",
+        "case_type": "N3_closed_account",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00367_0": 961,
+          "acc_00367_1": 558,
+          "acc_00367_2": 481
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000368",
+        "case_type": "N3_closed_account",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00368_0": 7200,
+          "acc_00368_1": 2800
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000369",
+        "case_type": "N3_closed_account",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00369_0": 2373,
+          "acc_00369_1": 1627
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000370",
+        "case_type": "N3_closed_account",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00370_0": 1818,
+          "acc_00370_1": 1182
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000371",
+        "case_type": "N3_closed_account",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00371_0": 2548,
+          "acc_00371_1": 1452
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000372",
+        "case_type": "N3_closed_account",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00372_0": 4127,
+          "acc_00372_1": 5873
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000373",
+        "case_type": "N3_closed_account",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00373_0": 1306,
+          "acc_00373_1": 755,
+          "acc_00373_2": 939
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000374",
+        "case_type": "N3_closed_account",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00374_0": 1191,
+          "acc_00374_1": 1809
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000375",
+        "case_type": "N3_closed_account",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00375_0": 1683,
+          "acc_00375_1": 1049,
+          "acc_00375_2": 1268
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000376",
+        "case_type": "N3_closed_account",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00376_0": 1177,
+          "acc_00376_1": 1823
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000377",
+        "case_type": "N3_closed_account",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00377_0": 2592,
+          "acc_00377_1": 3827,
+          "acc_00377_2": 3581
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000378",
+        "case_type": "N3_closed_account",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00378_0": 1588,
+          "acc_00378_1": 630,
+          "acc_00378_2": 782
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000379",
+        "case_type": "N3_closed_account",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00379_0": 3661,
+          "acc_00379_1": 6339
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000380",
+        "case_type": "N4_line_maps_to_multiple",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00380_0": 441,
+          "acc_00380_1": 738,
+          "acc_00380_2": 821
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000381",
+        "case_type": "N4_line_maps_to_multiple",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00381_0": 975,
+          "acc_00381_1": 1218,
+          "acc_00381_2": 807
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000382",
+        "case_type": "N4_line_maps_to_multiple",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00382_0": 2587,
+          "acc_00382_1": 3846,
+          "acc_00382_2": 3567
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000383",
+        "case_type": "N4_line_maps_to_multiple",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00383_0": 5809,
+          "acc_00383_1": 4191
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000384",
+        "case_type": "N4_line_maps_to_multiple",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00384_0": 4333,
+          "acc_00384_1": 1667
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000385",
+        "case_type": "N4_line_maps_to_multiple",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00385_0": 1060,
+          "acc_00385_1": 2940
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000386",
+        "case_type": "N4_line_maps_to_multiple",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00386_0": 1458,
+          "acc_00386_1": 542
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000387",
+        "case_type": "N4_line_maps_to_multiple",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00387_0": 1000,
+          "acc_00387_1": 2000
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000388",
+        "case_type": "N4_line_maps_to_multiple",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00388_0": 582,
+          "acc_00388_1": 1418
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000389",
+        "case_type": "N4_line_maps_to_multiple",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00389_0": 460,
+          "acc_00389_1": 738,
+          "acc_00389_2": 802
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000390",
+        "case_type": "N4_line_maps_to_multiple",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00390_0": 3358,
+          "acc_00390_1": 2642
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000391",
+        "case_type": "N4_line_maps_to_multiple",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00391_0": 7245,
+          "acc_00391_1": 2755
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000392",
+        "case_type": "N4_line_maps_to_multiple",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00392_0": 415,
+          "acc_00392_1": 863,
+          "acc_00392_2": 722
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000393",
+        "case_type": "N4_line_maps_to_multiple",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00393_0": 1826,
+          "acc_00393_1": 4174
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000394",
+        "case_type": "N4_line_maps_to_multiple",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00394_0": 4725,
+          "acc_00394_1": 5275
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000395",
+        "case_type": "N4_line_maps_to_multiple",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00395_0": 2414,
+          "acc_00395_1": 1586
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000396",
+        "case_type": "N4_line_maps_to_multiple",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00396_0": 4457,
+          "acc_00396_1": 1714,
+          "acc_00396_2": 3829
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000397",
+        "case_type": "N4_line_maps_to_multiple",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00397_0": 800,
+          "acc_00397_1": 1200
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000398",
+        "case_type": "N4_line_maps_to_multiple",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00398_0": 2740,
+          "acc_00398_1": 1260
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000399",
+        "case_type": "N4_line_maps_to_multiple",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00399_0": 3007,
+          "acc_00399_1": 4640,
+          "acc_00399_2": 2353
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000400",
+        "case_type": "N5_reason_mislabelled",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00400_0": 5397,
+          "acc_00400_1": 4603
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000401",
+        "case_type": "N5_reason_mislabelled",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00401_0": 759,
+          "acc_00401_1": 1059,
+          "acc_00401_2": 1182
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000402",
+        "case_type": "N5_reason_mislabelled",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00402_0": 2876,
+          "acc_00402_1": 3124
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000403",
+        "case_type": "N5_reason_mislabelled",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00403_0": 2381,
+          "acc_00403_1": 7619
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000404",
+        "case_type": "N5_reason_mislabelled",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00404_0": 643,
+          "acc_00404_1": 1687,
+          "acc_00404_2": 670
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000405",
+        "case_type": "N5_reason_mislabelled",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00405_0": 570,
+          "acc_00405_1": 694,
+          "acc_00405_2": 736
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000406",
+        "case_type": "N5_reason_mislabelled",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00406_0": 618,
+          "acc_00406_1": 1382
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000407",
+        "case_type": "N5_reason_mislabelled",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00407_0": 1460,
+          "acc_00407_1": 1540
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000408",
+        "case_type": "N5_reason_mislabelled",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00408_0": 2635,
+          "acc_00408_1": 3040,
+          "acc_00408_2": 4325
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000409",
+        "case_type": "N5_reason_mislabelled",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00409_0": 1269,
+          "acc_00409_1": 745,
+          "acc_00409_2": 1986
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000410",
+        "case_type": "N5_reason_mislabelled",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00410_0": 1137,
+          "acc_00410_1": 2863
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000411",
+        "case_type": "N5_reason_mislabelled",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00411_0": 3046,
+          "acc_00411_1": 2954
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000412",
+        "case_type": "N5_reason_mislabelled",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00412_0": 2274,
+          "acc_00412_1": 1726
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000413",
+        "case_type": "N5_reason_mislabelled",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00413_0": 1623,
+          "acc_00413_1": 2377
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000414",
+        "case_type": "N5_reason_mislabelled",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00414_0": 3772,
+          "acc_00414_1": 2695,
+          "acc_00414_2": 3533
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000415",
+        "case_type": "N5_reason_mislabelled",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00415_0": 956,
+          "acc_00415_1": 2044
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000416",
+        "case_type": "N5_reason_mislabelled",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00416_0": 2503,
+          "acc_00416_1": 2503,
+          "acc_00416_2": 994
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000417",
+        "case_type": "N5_reason_mislabelled",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00417_0": 686,
+          "acc_00417_1": 560,
+          "acc_00417_2": 754
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000418",
+        "case_type": "N5_reason_mislabelled",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00418_0": 4896,
+          "acc_00418_1": 5104
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      },
+      {
+        "case_id": "case_000419",
+        "case_type": "N5_reason_mislabelled",
+        "error_type": "false_allocation_on_invalid",
+        "pred_bear": {
+          "acc_00419_0": 3388,
+          "acc_00419_1": 6612
+        },
+        "truth_bear": {},
+        "abstained": false,
+        "nonline": "proportional",
+        "commission": "unknown"
+      }
+    ]
+  },
+  "structural_findings": {
+    "commission_allocation_impact": {
+      "finding": "Commission treatment has zero allocation impact in the observable predictor. largest_remainder() always sums to refund_amount, so residual_for_commission = max(refund - principal, 0) = 0 always. Commission treatment is a valid rule-extraction metric but not an allocation-impact metric on the current benchmark.",
+      "proved_by": "pre-implementation analysis: sum(largest_remainder(total,...)) == total always"
+    },
+    "recovery_order_allocation_impact": {
+      "finding": "Recovery order has zero allocation impact in the current allocator. Each account draws from its own independent balance_snapshot: take = min(bear[acc], balance[acc], residual). Verified: reversing recovery_order across all 420 validation cases produces 0 changed per-account bear_paise amounts.",
+      "proved_by": "pre-implementation analysis across all 420 validation cases"
+    },
+    "funding_map_observability": {
+      "finding": "For A1\u2013A4 cases (shipping_funder, platform_absorbs, discount_funder): the agreement text names the rule type but not which account plays that role. The allocator correctly abstains (funding_map_unavailable). This is an observability gap, not an extraction parsing gap. An LLM cannot close this gap either \u2014 the account identity is not present in any observable text source.",
+      "proved_by": "design of benchmark generator; funding_map is hidden state"
+    },
+    "r2_equals_r0_on_frozen_benchmark": {
+      "finding": "R2 == R0 on the Experiment-A subset of the frozen benchmark. The gap R1 \u2212 R2 is entirely due to structural observability constraints (missing funding_map for A-type nonline cases), NOT due to poor parsing or synonym gaps in the extractor.",
+      "next_question": "Does deterministic extraction leave a meaningful, measurable gap that an LLM could plausibly close? Answer: No \u2014 the gap is caused by missing information, not by language understanding limitations."
+    }
+  }
+}
