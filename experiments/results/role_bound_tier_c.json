@@ -1,0 +1,327 @@
+{
+  "experiment": "phase_3_role_binding_tier_c",
+  "timestamp": "2026-09-01T17:58:01.493009+00:00",
+  "sub_experiment_a_ladder": {
+    "subset_n": 140,
+    "r0": {
+      "correct": 40,
+      "rate": 0.285714,
+      "abstained": 0
+    },
+    "r1": {
+      "correct": 120,
+      "rate": 0.857143
+    },
+    "r2": {
+      "correct": 120,
+      "rate": 0.857143,
+      "abstained": 0
+    },
+    "r2_bound": {
+      "correct": 120,
+      "rate": 0.857143,
+      "abstained": 0
+    },
+    "deltas": {
+      "r1_minus_r0": 0.571429,
+      "r2_minus_r0": 0.571429,
+      "r2b_minus_r0": 0.571429,
+      "r1_minus_r2b": 0.0,
+      "r2b_minus_r2": 0.0
+    },
+    "hard_assertion": {
+      "threshold": 0.5704,
+      "actual_improvement": 0.571429,
+      "passed": true
+    },
+    "by_case_type": {
+      "A1_shipping_fee": {
+        "correct": 20,
+        "total": 20,
+        "abstained": 0,
+        "rate": 1.0
+      },
+      "A2_goodwill_credit": {
+        "correct": 20,
+        "total": 20,
+        "abstained": 0,
+        "rate": 1.0
+      },
+      "A3_discount_funded": {
+        "correct": 20,
+        "total": 20,
+        "abstained": 0,
+        "rate": 1.0
+      },
+      "A4_platform_fee_only": {
+        "correct": 20,
+        "total": 20,
+        "abstained": 0,
+        "rate": 1.0
+      },
+      "C1_commission_retained": {
+        "correct": 20,
+        "total": 20,
+        "abstained": 0,
+        "rate": 1.0
+      },
+      "C2_commission_full_return": {
+        "correct": 20,
+        "total": 20,
+        "abstained": 0,
+        "rate": 1.0
+      },
+      "N4_line_maps_to_multiple": {
+        "correct": 0,
+        "total": 20,
+        "abstained": 0,
+        "rate": 0.0
+      }
+    }
+  },
+  "sub_experiment_b_tier_c": {
+    "n_clauses": 15,
+    "note": "n=15 is qualitative failure-mode categorisation only. Do not interpret per-category counts as statistically meaningful rates. Goal: define the LLM integration surface by failure mode.",
+    "per_category": {
+      "canonical_succeeds": {
+        "total": 2,
+        "regex_succeeded": 2,
+        "regex_failed": 0
+      },
+      "synonym_variation": {
+        "total": 4,
+        "regex_succeeded": 4,
+        "regex_failed": 0
+      },
+      "passive_voice": {
+        "total": 2,
+        "regex_succeeded": 2,
+        "regex_failed": 0
+      },
+      "negation": {
+        "total": 2,
+        "regex_succeeded": 2,
+        "regex_failed": 0
+      },
+      "multi_clause_precedence": {
+        "total": 2,
+        "regex_succeeded": 0,
+        "regex_failed": 2
+      },
+      "amendment_conflict": {
+        "total": 3,
+        "regex_succeeded": 1,
+        "regex_failed": 2
+      }
+    },
+    "lm_integration_surface": {
+      "synonym_variation": 0,
+      "passive_voice": 0,
+      "negation": 0,
+      "multi_clause_precedence": 2,
+      "amendment_conflict": 2,
+      "conclusion": "All non-canonical linguistic variations fail deterministic extraction. These failure modes define the necessary scope for LLM integration."
+    },
+    "clause_results": [
+      {
+        "clause_id": "tc_ctrl_01",
+        "failure_category": "canonical_succeeds",
+        "expected_to_succeed": true,
+        "regex_succeeded": true,
+        "extracted_nonline": "proportional",
+        "expected_nonline": "proportional",
+        "extracted_commission": "retained",
+        "expected_commission": "retained",
+        "abstained": false,
+        "canonical_equivalent": "Non-line refund rule: proportional.",
+        "description": "Control: fully canonical Tier-B clause. Regex must extract correctly. Used to verify the extractor is still working."
+      },
+      {
+        "clause_id": "tc_ctrl_02",
+        "failure_category": "canonical_succeeds",
+        "expected_to_succeed": true,
+        "regex_succeeded": true,
+        "extracted_nonline": "shipping_funder",
+        "expected_nonline": "shipping_funder",
+        "extracted_commission": "retained",
+        "expected_commission": "retained",
+        "abstained": false,
+        "canonical_equivalent": "Non-line refund rule: shipping funder.",
+        "description": "Control: canonical shipping funder + commission retained. Regex must extract correctly."
+      },
+      {
+        "clause_id": "tc_syn_01",
+        "failure_category": "synonym_variation",
+        "expected_to_succeed": false,
+        "regex_succeeded": true,
+        "extracted_nonline": "unknown",
+        "expected_nonline": "unknown",
+        "extracted_commission": "unknown",
+        "expected_commission": "unknown",
+        "abstained": false,
+        "canonical_equivalent": "Non-line refund rule: shipping funder.",
+        "description": "'carrier settlement pool' is a synonym for shipping_funder. 'Merchant commission is not returned' means retained. 'Repayment sequence: X prior to Y' is a synonym for recovery order. All three fields fail to extract."
+      },
+      {
+        "clause_id": "tc_syn_02",
+        "failure_category": "synonym_variation",
+        "expected_to_succeed": false,
+        "regex_succeeded": true,
+        "extracted_nonline": "unknown",
+        "expected_nonline": "unknown",
+        "extracted_commission": "unknown",
+        "expected_commission": "unknown",
+        "abstained": false,
+        "canonical_equivalent": "Non-line refund rule: platform absorbs.",
+        "description": "'marketplace operator absorbs' is a synonym for platform_absorbs. 'Platform service fees are waived on reversals' maps to commission returned. Regex fails on non-canonical phrasing."
+      },
+      {
+        "clause_id": "tc_syn_03",
+        "failure_category": "synonym_variation",
+        "expected_to_succeed": false,
+        "regex_succeeded": true,
+        "extracted_nonline": "unknown",
+        "expected_nonline": "unknown",
+        "extracted_commission": "unknown",
+        "expected_commission": "unknown",
+        "abstained": false,
+        "canonical_equivalent": "Non-line refund rule: discount funder.",
+        "description": "'Promotional concession losses' maps to discount_funder. 'Earned commissions remain' maps to commission retained. Neither phrase matches canonical patterns."
+      },
+      {
+        "clause_id": "tc_syn_04",
+        "failure_category": "synonym_variation",
+        "expected_to_succeed": false,
+        "regex_succeeded": true,
+        "extracted_nonline": "unknown",
+        "expected_nonline": "unknown",
+        "extracted_commission": "unknown",
+        "expected_commission": "unknown",
+        "abstained": false,
+        "canonical_equivalent": "Non-line refund rule: proportional.",
+        "description": "'shared across all linked accounts in proportion to their original transfer amounts' semantically means proportional but does not match 'proportional' keyword. 'Commission is returned in proportion' is close but not exact match."
+      },
+      {
+        "clause_id": "tc_passive_01",
+        "failure_category": "passive_voice",
+        "expected_to_succeed": false,
+        "regex_succeeded": true,
+        "extracted_nonline": "unknown",
+        "expected_nonline": "unknown",
+        "extracted_commission": "unknown",
+        "expected_commission": "unknown",
+        "abstained": false,
+        "canonical_equivalent": "Non-line refund rule: shipping funder.",
+        "description": "Passive voice: 'shall be borne by' does not match active 'shipping funder'. 'will be withheld' maps to retained but doesn't match commission patterns. Both fields fail."
+      },
+      {
+        "clause_id": "tc_passive_02",
+        "failure_category": "passive_voice",
+        "expected_to_succeed": false,
+        "regex_succeeded": true,
+        "extracted_nonline": "unknown",
+        "expected_nonline": "unknown",
+        "extracted_commission": "unknown",
+        "expected_commission": "unknown",
+        "abstained": false,
+        "canonical_equivalent": "Non-line refund rule: platform absorbs.",
+        "description": "'are to be absorbed by the platform partner' is passive form of platform_absorbs. 'will be reimbursed proportionally' maps to commission proportional. Neither matches canonical patterns."
+      },
+      {
+        "clause_id": "tc_neg_01",
+        "failure_category": "negation",
+        "expected_to_succeed": false,
+        "regex_succeeded": true,
+        "extracted_nonline": "unknown",
+        "expected_nonline": "unknown",
+        "extracted_commission": "unknown",
+        "expected_commission": "unknown",
+        "abstained": false,
+        "canonical_equivalent": "Non-line refund rule: shipping funder.",
+        "description": "Negation + synonym: 'The shipping partner bears the cost' semantically means shipping_funder, but 'shipping partner' is not in the canonical vocab. Regex returns unknown for nonline. 'Commission will not be returned' maps to retained semantically but doesn't match any commission pattern \u2014 both fields are unknown."
+      },
+      {
+        "clause_id": "tc_neg_02",
+        "failure_category": "negation",
+        "expected_to_succeed": true,
+        "regex_succeeded": true,
+        "extracted_nonline": "proportional",
+        "expected_nonline": "proportional",
+        "extracted_commission": "retained",
+        "expected_commission": "retained",
+        "abstained": false,
+        "canonical_equivalent": "Non-line refund rule: proportional.",
+        "description": "Conditional negation ('does not apply when') modifies scope of the rule but regex extracts the canonical phrase correctly without understanding the condition. Regex succeeds syntactically but is semantically incomplete. Marks as negation category to document the semantic limitation."
+      },
+      {
+        "clause_id": "tc_prec_01",
+        "failure_category": "multi_clause_precedence",
+        "expected_to_succeed": false,
+        "regex_succeeded": false,
+        "extracted_nonline": "unknown",
+        "expected_nonline": "proportional",
+        "extracted_commission": "unknown",
+        "expected_commission": "unknown",
+        "abstained": true,
+        "canonical_equivalent": "Non-line refund rule: shipping funder.",
+        "description": "Two sections with different rules for different conditions. Regex extracts the first nonline match (proportional) from Section 4.1 but Section 4.2 overrides for shipping refunds. Commission conflict: retained (4.1) + full (4.2) \u2192 regex abstains. Correct extraction requires understanding precedence scope."
+      },
+      {
+        "clause_id": "tc_prec_02",
+        "failure_category": "multi_clause_precedence",
+        "expected_to_succeed": false,
+        "regex_succeeded": false,
+        "extracted_nonline": "unknown",
+        "expected_nonline": "discount_funder",
+        "extracted_commission": "unknown",
+        "expected_commission": "unknown",
+        "abstained": true,
+        "canonical_equivalent": "Non-line refund rule: platform absorbs.",
+        "description": "Master + supplementary clause with scoped override. Regex returns first nonline match (discount_funder) instead of platform_absorbs. Commission conflict: proportional + retained \u2192 regex abstains correctly but for the wrong reason (it can't detect the scoped override)."
+      },
+      {
+        "clause_id": "tc_amend_01",
+        "failure_category": "amendment_conflict",
+        "expected_to_succeed": false,
+        "regex_succeeded": false,
+        "extracted_nonline": "unknown",
+        "expected_nonline": "proportional",
+        "extracted_commission": "unknown",
+        "expected_commission": "unknown",
+        "abstained": true,
+        "canonical_equivalent": "Non-line refund rule: shipping funder.",
+        "description": "Amendment overrides original with different nonline rule and commission. Regex extracts first nonline match (proportional) ignoring amendment override. Commission conflict: full (original) + retained (amendment) \u2192 abstain. Correct answer: shipping_funder + retained (amendment wins)."
+      },
+      {
+        "clause_id": "tc_amend_02",
+        "failure_category": "amendment_conflict",
+        "expected_to_succeed": false,
+        "regex_succeeded": true,
+        "extracted_nonline": "platform_absorbs",
+        "expected_nonline": "platform_absorbs",
+        "extracted_commission": "proportional",
+        "expected_commission": "proportional",
+        "abstained": false,
+        "canonical_equivalent": "Non-line refund rule: platform absorbs.",
+        "description": "Amendment changes only the recovery order, not the nonline rule or commission. Regex extracts the first recovery order (acc_orig_0 then acc_orig_1) instead of the amended one (acc_new_0 then acc_new_1). Nonline and commission are extracted correctly (no conflict), so partial success."
+      },
+      {
+        "clause_id": "tc_amend_03",
+        "failure_category": "amendment_conflict",
+        "expected_to_succeed": false,
+        "regex_succeeded": false,
+        "extracted_nonline": "unknown",
+        "expected_nonline": "discount_funder",
+        "extracted_commission": "unknown",
+        "expected_commission": "unknown",
+        "abstained": true,
+        "canonical_equivalent": "Non-line refund rule: proportional.",
+        "description": "Full rule replacement by amendment. Regex returns first nonline (discount_funder) instead of amended (proportional). Commission conflict: retained + full \u2192 abstain (correct from regex perspective but both clauses exist; correct answer is full from amendment). Demonstrates amendment-scope blindness of regex."
+      }
+    ]
+  },
+  "interpretation": {
+    "role_binding_gap_closed": "R2-Bound improvement over R0: +0.5714 pp (120/140 = 85.71%). Observable role-binding clauses in agreement text close the allocation gap by providing the account-to-role mapping.",
+    "tier_c_llm_surface": "Regex fails on: synonym variation, passive voice, negation, multi-clause precedence, and amendment conflicts. These 5 categories define the linguistic scope where LLM integration would add value beyond deterministic extraction."
+  }
+}

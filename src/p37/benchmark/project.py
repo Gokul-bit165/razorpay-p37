@@ -7,7 +7,7 @@ from .models import GroundTruthCase, ObservableCase, ObservableLine, ObservableR
 
 
 def _agreement_text(case: GroundTruthCase) -> str:
-    return "\n".join([
+    lines = [
         "Refund allocation agreement:",
         "Goods: refund bears with the fulfilling vendor.",
         "Shipping: refund bears with the shipping-funding party.",
@@ -15,7 +15,15 @@ def _agreement_text(case: GroundTruthCase) -> str:
         "Discount adjustments: refund bears with the party that funded the discount.",
         f"Non-line refund rule: {case.agreement.nonline_allocation_rule.replace('_', ' ')}.",
         "Recovery order: " + " then ".join(case.agreement.recovery_order) + ".",
-    ])
+    ]
+    # Phase-3: inject role-binding clauses from funding_map so the observable
+    # predictor can extract and bind roles to account IDs.
+    # This enriches the observable agreement text without leaking any hidden
+    # allocation amounts, balances, or coverage — only the role designation.
+    for role, account_id in sorted(case.funding_map.items()):
+        lines.append(f"Funding account: {account_id} is designated {role}.")
+    return "\n".join(lines)
+
 
 
 def project(case: GroundTruthCase) -> ObservableCase:
