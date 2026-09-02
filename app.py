@@ -19,7 +19,6 @@ sys.path.insert(0, str(_ROOT / "src"))
 
 from p37.benchmark.generator import GenerationConfig, generate
 from p37.benchmark.models import (
-    LineKind,
     ObservableCase,
     ObservableLine,
     ObservableRefund,
@@ -54,28 +53,47 @@ st.set_page_config(
 
 st.markdown("""
 <style>
-    /* Razorpay Branding Theme */
-    :root {
-        --rzp-navy: #0C2340;
-        --rzp-blue: #0D6EFD;
-        --rzp-light-blue: #E8F2FF;
-        --rzp-green: #10B981;
-        --rzp-red: #EF4444;
-        --rzp-gray: #64748B;
-        --rzp-card-bg: #FFFFFF;
-    }
-    
+    /* Dark Fintech Theme */
     .stApp {
-        background-color: #F8FAFC;
+        background-color: #0A1128 !important;
+        color: #F8FAFC !important;
     }
     
+    /* Global Text Visibility */
+    h1, h2, h3, h4, h5, h6, p, label, .stMarkdown {
+        color: #F8FAFC !important;
+    }
+
+    /* Tabs Styling */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 8px;
+        background-color: #111E38;
+        padding: 6px;
+        border-radius: 10px;
+        border: 1px solid #1E2E4A;
+    }
+    .stTabs [data-baseweb="tab"] {
+        font-size: 0.95rem !important;
+        font-weight: 600 !important;
+        color: #94A3B8 !important;
+        padding: 8px 16px !important;
+        border-radius: 6px !important;
+        border: none !important;
+        background: transparent !important;
+    }
+    .stTabs [aria-selected="true"] {
+        color: #FFFFFF !important;
+        background-color: #0D6EFD !important;
+    }
+
     .rzp-header {
         background: linear-gradient(135deg, #0C2340 0%, #17375E 100%);
         padding: 24px 32px;
         border-radius: 12px;
         color: white;
         margin-bottom: 24px;
-        box-shadow: 0 4px 20px rgba(12, 35, 64, 0.15);
+        border: 1px solid #203A63;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
     }
     
     .rzp-badge {
@@ -86,35 +104,65 @@ st.markdown("""
         font-weight: 600;
         margin-right: 8px;
     }
-    .badge-green { background-color: #D1FAE5; color: #065F46; }
-    .badge-blue { background-color: #DBEAFE; color: #1E40AF; }
-    .badge-amber { background-color: #FEF3C7; color: #92400E; }
-    .badge-red { background-color: #FEE2E2; color: #991B1B; }
+    .badge-green { background-color: #064E3B; color: #6EE7B7; border: 1px solid #059669; }
+    .badge-blue { background-color: #1E3A8A; color: #93C5FD; border: 1px solid #2563EB; }
+    .badge-amber { background-color: #78350F; color: #FCD34D; border: 1px solid #D97706; }
+    .badge-red { background-color: #7F1D1D; color: #FCA5A5; border: 1px solid #DC2626; }
     
     .card-box {
-        background: white;
-        border: 1px solid #E2E8F0;
+        background: #111E38;
+        border: 1px solid #1E2E4A;
         border-radius: 10px;
         padding: 20px;
         margin-bottom: 20px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        color: #F8FAFC !important;
+    }
+    
+    .context-callout {
+        background: #0E223D;
+        border-left: 4px solid #38BDF8;
+        padding: 14px 18px;
+        border-radius: 6px;
+        margin: 14px 0;
+        color: #E2E8F0 !important;
+        font-size: 0.95rem;
     }
     
     .span-pill {
-        background-color: #FEF08A;
-        color: #854D0E;
-        padding: 2px 6px;
+        background-color: #854D0E;
+        color: #FEF08A;
+        padding: 2px 8px;
         border-radius: 4px;
         font-weight: 600;
         font-family: monospace;
+        border: 1px solid #CA8A04;
     }
     
     .money-discrepancy {
-        background: linear-gradient(135deg, #FFF1F2 0%, #FFE4E6 100%);
-        border-left: 6px solid #E11D48;
-        padding: 16px 20px;
+        background: linear-gradient(135deg, #3B0D1A 0%, #4C0519 100%);
+        border-left: 6px solid #F43F5E;
+        padding: 18px 22px;
         border-radius: 8px;
-        margin: 16px 0;
+        margin: 18px 0;
+        border: 1px solid #9F1239;
+        color: #FFE4E6 !important;
+    }
+
+    /* Table styling */
+    div[data-testid="stTable"] table {
+        background-color: #111E38 !important;
+        color: #F8FAFC !important;
+        border-radius: 8px;
+        border: 1px solid #1E2E4A;
+    }
+    div[data-testid="stTable"] th {
+        background-color: #172A4D !important;
+        color: #93C5FD !important;
+    }
+    div[data-testid="stTable"] td {
+        color: #F8FAFC !important;
+        border-bottom: 1px solid #1E2E4A !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -264,7 +312,7 @@ with tab_sim:
         )
         scenario = SCENARIOS[preset_key]
 
-        st.info(f"**Context:** {scenario['explanation']}")
+        st.markdown(f'<div class="context-callout"><strong>💡 Scenario Context:</strong> {scenario["explanation"]}</div>', unsafe_allow_html=True)
 
         # Editable or display agreement text
         agreement_text = st.text_area(
@@ -314,7 +362,7 @@ with tab_sim:
             ObservableLine(
                 line_id=f"line_{i}",
                 line_amount_paise=amt,
-                line_kind=LineKind.goods,
+                line_kind="goods",
                 line_attribution=(acc,),
             )
             for i, (acc, amt, _, _) in enumerate(scenario["transfers"])
@@ -339,7 +387,7 @@ with tab_sim:
         # Display Extracted Rule Card
         st.markdown("""
         <div class="card-box">
-            <h4 style="margin: 0 0 12px 0; color: #0C2340;">Extracted Structured Rule (P37 R3)</h4>
+            <h4 style="margin: 0 0 12px 0; color: #38BDF8 !important; font-weight: 700;">Extracted Structured Rule (P37 R3)</h4>
         """, unsafe_allow_html=True)
 
         col_r1, col_r2 = st.columns(2)
