@@ -9,7 +9,12 @@ Covers:
 - Source span exact substring validation
 - ExtractionError on invalid span
 """
+import sys
+from pathlib import Path
 import pytest
+
+sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
+
 from p37.extraction.extractor import extract
 from p37.extraction.models import (
     AbstainReason,

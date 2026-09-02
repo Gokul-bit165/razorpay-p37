@@ -10,8 +10,11 @@ Covers:
 """
 import ast
 import json
+import sys
 from pathlib import Path
 import pytest
+
+sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from p37.benchmark.generator import GenerationConfig, generate
 from p37.benchmark.groundtruth import resolve
