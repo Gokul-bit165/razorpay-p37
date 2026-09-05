@@ -39,6 +39,16 @@ def allocate(obs: ObservableCase, rule: StructuredRule) -> Prediction:
     Returns a Prediction with abstained=True when allocation cannot be determined.
     Does NOT import or access GroundTruthCase or any hidden benchmark type.
     """
+    # ── Structural Security Invariants (P0-3) ──────────────────────────────────
+    # The allocator solely accepts qualitative enum classifications from the extracted
+    # rule. Under no circumstances may an extracted rule inject monetary paise amounts,
+    # balance modifications, or arbitrary floating-point percentage modifiers.
+    assert not hasattr(rule, "amounts"), "Security invariant: StructuredRule must never contain amount fields."
+    assert not hasattr(rule, "allocated_paise"), "Security invariant: StructuredRule must never specify paise allocations."
+    assert not hasattr(rule, "fee_percentage"), "Security invariant: StructuredRule must never specify percentages."
+    assert rule.nonline_allocation in NonlineAllocation, f"Security invariant: Unknown nonline allocation '{rule.nonline_allocation}'."
+    assert rule.commission_treatment in CommissionTreatment, f"Security invariant: Unknown commission treatment '{rule.commission_treatment}'."
+
     refund = obs.refunds[0]
     refund_id = refund.refund_id
     refund_amount = refund.refund_amount_paise
@@ -46,6 +56,7 @@ def allocate(obs: ObservableCase, rule: StructuredRule) -> Prediction:
     # Abstain if rule instructs it
     if rule.abstain:
         return Prediction(refund_id, (), True, f"rule_abstain:{rule.abstain_reason.value}")
+
 
     # Observable guard rails
     transfer_sum = sum(t.transfer_amount_paise for t in obs.transfers)
