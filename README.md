@@ -19,22 +19,9 @@
 [![Precision: Integer-Paise](https://img.shields.io/badge/Precision-Integer--Paise%20(Zero%20Float%20Drift)-blue)](src/p37/extraction/allocator.py)
 [![Grounding: Verbatim Spans](https://img.shields.io/badge/Grounding-100%25%20Verbatim%20Spans-brightgreen)](src/p37/extraction/llm_extractor.py)
 [![Hallucinations: 0.0%](https://img.shields.io/badge/Hallucinations-0.0%25-green)](experiments/results/phase4_llm_extraction.json)
-[![Model: Gemini Flash](https://img.shields.io/badge/Model-Gemini%20Flash%20Lite%20(Live)-orange)](FINDINGS.md)
+[![Model: Gemini Flash](https://img.shields.io/badge/Model-Gemini%20Flash%20Lite%20(Live)-orange)](https://razorpay-p37.streamlit.app/)
 
 </div>
-
----
-
-## 🌐 Quick Access Links
-
-| Resource | Link | Description |
-| :--- | :--- | :--- |
-| 🚀 **Live Interactive App** | **[https://razorpay-p37.streamlit.app/](https://razorpay-p37.streamlit.app/)** | Deployed interactive simulator on Streamlit Cloud |
-| 🎬 **Pitch Video (Google Drive)** | **[Watch 3-Minute Presentation](https://drive.google.com/file/d/1cxbvkrF-NbFYTdERS7vxRZUVZBMc7s_l/view?usp=sharing)** | High-definition video with full audio narration |
-| 📁 **Committed Video File** | [`0905.mp4`](0905.mp4) | Local 1080p MP4 walkthrough |
-| 📖 **Official Submission** | [SUBMISSION.md](SUBMISSION.md) | Official Buildathon submission & benchmark report |
-| 🔍 **Model Audit & Provenance** | [FINDINGS.md](FINDINGS.md) | Comprehensive audit of live Gemini API call recordings |
-| 📝 **Voiceover Script** | [DEMO_SCRIPT.md](DEMO_SCRIPT.md) | Shot-by-shot narration, timing, and spoken lines |
 
 ---
 
