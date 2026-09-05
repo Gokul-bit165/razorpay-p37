@@ -671,7 +671,6 @@ def main() -> None:
             "tier_b_clean_n": len(TIER_B_CLEAN),
             "safety_set_n": len(SAFETY_SET),
             "rule_impact_cases_n": len(RULE_IMPACT_CASES),
-            "timestamp": datetime.now(timezone.utc).isoformat(),
         },
         "regression_checks": regression,
         "allocation": {

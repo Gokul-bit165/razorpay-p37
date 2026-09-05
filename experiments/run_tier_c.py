@@ -313,7 +313,6 @@ def main():
     # Assemble results
     results = {
         "experiment": "phase_3_role_binding_tier_c",
-        "timestamp": datetime.now(timezone.utc).isoformat(),
         "sub_experiment_a_ladder": ladder,
         "sub_experiment_b_tier_c": tier_c,
         "interpretation": {

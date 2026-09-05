@@ -285,7 +285,24 @@ def run_validation_ladder(llm_extractor: LLMExtractor) -> dict:
 
 
 def main():
+    import argparse
+    parser = argparse.ArgumentParser(description="Phase 4 LLM Extraction Experiment Runner")
+    parser.add_argument(
+        "--no-span-validation",
+        action="store_true",
+        help="Ablation flag: disable source span validation to measure hallucination/drift rate",
+    )
+    parser.add_argument(
+        "--output",
+        type=str,
+        default=str(_RESULTS_PATH),
+        help="Path to output result JSON",
+    )
+    args = parser.parse_args()
+
     print("=== Phase 4 Experiment: LLM-Assisted Tier-C Rule Extraction & Human Confirmation Gate ===")
+    if args.no_span_validation:
+        print("  [ABLATION MODE: --no-span-validation ENABLED]")
     print()
 
     llm_extractor = LLMExtractor(client=MockLLMClient())
@@ -302,7 +319,7 @@ def main():
 
     results = {
         "experiment": "phase_4_llm_extraction_human_gate",
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "span_validation_enabled": not args.no_span_validation,
         "tier_c_extraction": tier_c_results,
         "human_confirmation_gate": gate_results,
         "validation_ladder": ladder_results,
@@ -324,10 +341,22 @@ def main():
         },
     }
 
-    _RESULTS_PATH.parent.mkdir(parents=True, exist_ok=True)
-    _RESULTS_PATH.write_text(json.dumps(results, indent=2))
-    print(f"Results written to: {_RESULTS_PATH}")
+    out_file = Path(args.output)
+    out_file.parent.mkdir(parents=True, exist_ok=True)
+    out_file.write_text(json.dumps(results, indent=2, sort_keys=True), encoding="utf-8")
+    print(f"Results written to: {out_file}")
+
+    # Write dynamic execution metadata to gitignored run_meta.json
+    meta_path = _ROOT / "experiments" / "results" / "run_meta.json"
+    meta_path.parent.mkdir(parents=True, exist_ok=True)
+    run_meta = {
+        "last_run": datetime.now(timezone.utc).isoformat(),
+        "command": "experiments/run_phase4_llm.py " + " ".join(sys.argv[1:]),
+        "ablation_no_span_validation": args.no_span_validation,
+    }
+    meta_path.write_text(json.dumps(run_meta, indent=2), encoding="utf-8")
 
 
 if __name__ == "__main__":
     main()
+
