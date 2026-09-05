@@ -3,9 +3,18 @@
 
 **Track: AI Revenue Recovery** — *Find revenue that's slipping away and win it back.*
 
-<div align="left">
+<div align="center" style="margin: 24px 0 16px 0;">
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](http://localhost:8501)
+# [🚀 OPEN LIVE STREAMLIT APP: razorpay-p37.streamlit.app](https://razorpay-p37.streamlit.app/)
+
+[![Live Streamlit App](https://img.shields.io/badge/🚀%20LAUNCH%20LIVE%20APP-razorpay--p37.streamlit.app-blue?style=for-the-badge&logo=streamlit&logoColor=white&color=0D6EFD)](https://razorpay-p37.streamlit.app/)
+[![Watch Pitch Video](https://img.shields.io/badge/🎬%20WATCH%20PITCH%20VIDEO-Google%20Drive-red?style=for-the-badge&logo=google-drive&logoColor=white&color=EA4335)](https://drive.google.com/file/d/1cxbvkrF-NbFYTdERS7vxRZUVZBMc7s_l/view?usp=sharing)
+[![Local Video](https://img.shields.io/badge/📁%20LOCAL%20MP4-0905.mp4-purple?style=for-the-badge&color=8B5CF6)](0905.mp4)
+
+</div>
+
+<div align="center">
+
 [![Tests: 70 Passed](https://img.shields.io/badge/Tests-70%20Passed%20(100%25)-success)](tests)
 [![Precision: Integer-Paise](https://img.shields.io/badge/Precision-Integer--Paise%20(Zero%20Float%20Drift)-blue)](src/p37/extraction/allocator.py)
 [![Grounding: Verbatim Spans](https://img.shields.io/badge/Grounding-100%25%20Verbatim%20Spans-brightgreen)](src/p37/extraction/llm_extractor.py)
@@ -14,59 +23,59 @@
 
 </div>
 
-📖 **Official Submission:** [SUBMISSION.md](SUBMISSION.md) | 🔍 **Model Audit:** [FINDINGS.md](FINDINGS.md) | 🎬 **Voiceover Script:** [DEMO_SCRIPT.md](DEMO_SCRIPT.md) | 🌐 **Launch App:** [Streamlit Live Simulator](http://localhost:8501)
+---
+
+## 🌐 Quick Access Links
+
+| Resource | Link | Description |
+| :--- | :--- | :--- |
+| 🚀 **Live Interactive App** | **[https://razorpay-p37.streamlit.app/](https://razorpay-p37.streamlit.app/)** | Deployed interactive simulator on Streamlit Cloud |
+| 🎬 **Pitch Video (Google Drive)** | **[Watch 3-Minute Presentation](https://drive.google.com/file/d/1cxbvkrF-NbFYTdERS7vxRZUVZBMc7s_l/view?usp=sharing)** | High-definition video with full audio narration |
+| 📁 **Committed Video File** | [`0905.mp4`](0905.mp4) | Local 1080p MP4 walkthrough |
+| 📖 **Official Submission** | [SUBMISSION.md](SUBMISSION.md) | Official Buildathon submission & benchmark report |
+| 🔍 **Model Audit & Provenance** | [FINDINGS.md](FINDINGS.md) | Comprehensive audit of live Gemini API call recordings |
+| 📝 **Voiceover Script** | [DEMO_SCRIPT.md](DEMO_SCRIPT.md) | Shot-by-shot narration, timing, and spoken lines |
 
 ---
 
-## 🎥 Playable Pitch & Demonstration Video (3 Min)
+## 📸 Interactive System Walkthrough
 
-<video controls width="100%" poster="docs/assets/demo_portfolio_simulation.png">
-  <source src="0905.mp4" type="video/mp4">
-  Your browser does not support the video tag. You can directly view <a href="0905.mp4">0905.mp4</a>.
-</video>
-
-> 🎬 **Direct Video Link:** [▶ Play 0905.mp4 (High Definition)](0905.mp4)  
-> *Shot-by-shot narration, timestamps, and spoken script available in [DEMO_SCRIPT.md](DEMO_SCRIPT.md).*
-
----
-
-## 📸 System Screenshots & UI Walkthrough
-
-The interactive simulator (`python -m streamlit run app.py`) implements a 5-step guided narrative demonstrating root-cause contract diagnosis, human confirmation, integer-paise conservation, and bulk portfolio revenue recovery.
-
-<div align="center">
-  <a href="http://localhost:8501">
-    <img src="https://static.streamlit.io/badges/streamlit_badge_black_white.svg" height="38" alt="Launch Streamlit App">
-  </a>
-  <p><em>Click badge above to launch the live Streamlit interactive environment (Local: <code>http://localhost:8501</code>)</em></p>
-</div>
+The application implements a 5-step guided narrative demonstrating root-cause contract diagnosis, human confirmation, integer-paise conservation, and bulk portfolio revenue recovery.
 
 ### 1. Portfolio-Scale Revenue Recovery (Step 5 At Scale)
-> **Quantified Revenue Protection:** Across **2,900 simulated refund transactions** totaling **₹312,839 in refund volume**, the engine prevented **₹69,020 in naive-clawback overcharges**, achieving **100.0% deterministic accuracy** vs. ground truth.
+> **Quantified Revenue Protection:** Across **2,900 simulated refund transactions** totaling **₹312,839 in refund volume**, the engine prevented **₹69,020 in naive-clawback overcharges**, achieving **100.0% deterministic accuracy** vs. independent ground truth.
 
 <p align="center">
-  <img src="docs/assets/demo_portfolio_simulation.png" width="100%" alt="Bulk Portfolio Impact Simulation">
+  <a href="https://razorpay-p37.streamlit.app/">
+    <img src="docs/assets/demo_portfolio_simulation.png" width="100%" alt="Bulk Portfolio Impact Simulation">
+  </a>
 </p>
 
 ### 2. Category Misallocation Breakdown & Worst Overcharges
 > **Granular Protection:** Real-time breakdown across 21 real-world transaction types, highlighting exactly which merchants were saved from wrongful debits.
 
 <p align="center">
-  <img src="docs/assets/demo_category_impact_charts.png" width="100%" alt="Category Misallocation Breakdown and Worst Overcharges">
+  <a href="https://razorpay-p37.streamlit.app/">
+    <img src="docs/assets/demo_category_impact_charts.png" width="100%" alt="Category Misallocation Breakdown and Worst Overcharges">
+  </a>
 </p>
 
 ### 3. Verbatim Source-Span Grounding & Anti-Hallucination Guard (Step 2)
 > **Zero Financial Risk:** The LLM extracts structured rules with character-level source span citations. If an attribute cannot be quoted verbatim from the agreement, execution halts immediately (**0.0% hallucinations**).
 
 <p align="center">
-  <img src="docs/assets/demo_clause_grounding.png" width="100%" alt="Verbatim Source Span Grounding">
+  <a href="https://razorpay-p37.streamlit.app/">
+    <img src="docs/assets/demo_clause_grounding.png" width="100%" alt="Verbatim Source Span Grounding">
+  </a>
 </p>
 
 ### 4. Raw Per-Case Audit Trail & Simulation Drilldown
 > **Immutable Transparency:** Complete line-by-line verification for every transaction, comparing default Route deductions against contract-aware truth.
 
 <p align="center">
-  <img src="docs/assets/demo_simulation_drilldown.png" width="100%" alt="Per-case Simulation Drilldown">
+  <a href="https://razorpay-p37.streamlit.app/">
+    <img src="docs/assets/demo_simulation_drilldown.png" width="100%" alt="Per-case Simulation Drilldown">
+  </a>
 </p>
 
 ---
@@ -159,7 +168,7 @@ On non-canonical contract clauses (synonyms, passive voice, negation, multi-clau
 ```bash
 python -m streamlit run app.py
 ```
-Open **http://localhost:8501** in your browser.
+Or open the live deployment directly: **[https://razorpay-p37.streamlit.app/](https://razorpay-p37.streamlit.app/)**
 
 ### 2. Run the Full Test Suite (70 Passing Tests)
 ```bash
@@ -181,7 +190,7 @@ python scripts/generate_manifest.py --verify
 
 ## Core Recovery Engineering Guarantees
 
-1. **Integer Paise Only:** Never operates on floating-point currencies — no rounding drift in recovered amounts.
+1. **Integer Paise Only:** Never operates on floating-point currencies — zero rounding drift.
 2. **Conservation of Funds:** `sum(allocated_paise) == refund_amount_paise` strictly guaranteed by largest-remainder rounding.
 3. **Strict Boundary Isolation:** Predictor code never imports hidden ground-truth classes.
 4. **Verifiable Diagnosis:** Every rule extracted by an LLM is checked against verbatim contract text.
