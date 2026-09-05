@@ -254,33 +254,58 @@ def run_validation_ladder(llm_extractor: LLMExtractor) -> dict:
         "C2_commission_full_return",
     })
 
+    def _get_stratified_subsample(cases_list: list, total_sample_size: int = 40) -> list:
+        by_type = defaultdict(list)
+        for c in cases_list:
+            by_type[c.case_type].append(c)
+        for t in by_type:
+            by_type[t].sort(key=lambda x: x.case_id)
+        sub = []
+        for idx, t in enumerate(sorted(_EXPERIMENT_A_TYPES)):
+            k = 6 if idx < 5 else 5
+            sub.extend(by_type[t][:k])
+        return sub
+
+    subsample_cases = _get_stratified_subsample([c for c in cases if c.case_type in _EXPERIMENT_A_TYPES], 40)
+    subsample_ids = {c.case_id for c in subsample_cases}
+
     subset = [(c, projections[c.case_id], truths[c.case_id])
               for c in cases if c.case_type in _EXPERIMENT_A_TYPES]
-    n = len(subset)
+    n_full = len(subset)
+    n_sub = len(subsample_cases)
 
-    r1_correct = r2_correct = r3_correct = 0
+    r1_correct = r2_correct = 0
+    r1_sub_correct = r2_sub_correct = r3_sub_correct = 0
 
     for c, obs, truth in subset:
+        tb = _truth_bear(truth)
         pb_r1 = _pred_bear(allocate(obs, oracle_rule(c)))
         pb_r2 = _pred_bear(allocate(obs, extract_regex(obs.agreement_text)))
-        pb_r3 = _pred_bear(allocate(obs, llm_extractor.extract(obs.agreement_text)))
-        truth_b = _truth_bear(truth)
 
-        if pb_r1 == truth_b: r1_correct += 1
-        if pb_r2 == truth_b: r2_correct += 1
-        if pb_r3 == truth_b: r3_correct += 1
+        if pb_r1 == tb: r1_correct += 1
+        if pb_r2 == tb: r2_correct += 1
 
-    print(f"  Ladder results on {n} cases:")
-    print(f"    R1 (Oracle):    {r1_correct}/{n} ({r1_correct/n*100:.2f}%)")
-    print(f"    R2 (Regex):     {r2_correct}/{n} ({r2_correct/n*100:.2f}%)")
-    print(f"    R3 (LLM):       {r3_correct}/{n} ({r3_correct/n*100:.2f}%)")
+        if c.case_id in subsample_ids:
+            if pb_r1 == tb: r1_sub_correct += 1
+            if pb_r2 == tb: r2_sub_correct += 1
+            pb_r3 = _pred_bear(allocate(obs, llm_extractor.extract(obs.agreement_text)))
+            if pb_r3 == tb: r3_sub_correct += 1
+
+    print(f"  Ladder results on full {n_full} cases:")
+    print(f"    R1 (Oracle):    {r1_correct}/{n_full} ({r1_correct/n_full*100:.2f}%)")
+    print(f"    R2 (Regex):     {r2_correct}/{n_full} ({r2_correct/n_full*100:.2f}%)")
+    print(f"  Ladder results on stratified subsample {n_sub} cases:")
+    print(f"    R1 (Oracle):    {r1_sub_correct}/{n_sub} ({r1_sub_correct/n_sub*100:.2f}%)")
+    print(f"    R2 (Regex):     {r2_sub_correct}/{n_sub} ({r2_sub_correct/n_sub*100:.2f}%)")
+    print(f"    R3 (LLM):       {r3_sub_correct}/{n_sub} ({r3_sub_correct/n_sub*100:.2f}%)")
 
     return {
-        "cases_evaluated": n,
+        "cases_evaluated_full": n_full,
+        "cases_evaluated_subsample": n_sub,
         "r1_oracle_correct": r1_correct,
         "r2_regex_correct": r2_correct,
-        "r3_llm_correct": r3_correct,
-        "r3_equals_r1": (r3_correct == r1_correct),
+        "r3_llm_subsample_correct": r3_sub_correct,
+        "r3_equals_r1_on_subsample": (r3_sub_correct == r1_sub_correct),
     }
 
 
@@ -298,14 +323,24 @@ def main():
         default=str(_RESULTS_PATH),
         help="Path to output result JSON",
     )
+    parser.add_argument(
+        "--llm-mode",
+        choices=["replay", "record", "mock", "live"],
+        default="replay",
+        help="LLM execution mode (default: replay from experiments/results/llm_transcripts/)",
+    )
     args = parser.parse_args()
 
     print("=== Phase 4 Experiment: LLM-Assisted Tier-C Rule Extraction & Human Confirmation Gate ===")
     if args.no_span_validation:
         print("  [ABLATION MODE: --no-span-validation ENABLED]")
+    print(f"  [LLM Mode: {args.llm_mode}]")
     print()
 
-    llm_extractor = LLMExtractor(client=MockLLMClient())
+    from p37.extraction.llm_client import create_llm_client
+
+    llm_client = create_llm_client(mode=args.llm_mode)
+    llm_extractor = LLMExtractor(client=llm_client)
     human_gate = HumanConfirmationGate()
 
     tier_c_results = run_tier_c_comparison(llm_extractor)

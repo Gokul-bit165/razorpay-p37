@@ -11,3 +11,4 @@ build/
 env/
 venv/
 experiments/results/run_meta.json
+.env

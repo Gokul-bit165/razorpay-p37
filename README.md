@@ -1,6 +1,6 @@
 # Razorpay Route · P37 Split Clawback Engine
 
-[![Tests: 52 Passed](https://img.shields.io/badge/Tests-52%20Passed%20(100%25)-success)](tests)
+[![Tests: 68 Passed](https://img.shields.io/badge/Tests-68%20Passed%20(100%25)-success)](tests)
 [![Precision: Integer-Paise](https://img.shields.io/badge/Precision-Integer--Paise%20(No%20Float%20Drift)-blue)](src/p37/extraction/allocator.py)
 [![Grounding: Verbatim Spans](https://img.shields.io/badge/Grounding-100%25%20Verbatim%20Spans-brightgreen)](src/p37/extraction/llm_extractor.py)
 [![Hallucinations: 0.0%](https://img.shields.io/badge/Hallucinations-0.0%25-green)](experiments/results/phase4_llm_extraction.json)
@@ -9,26 +9,33 @@
 
 **Problem P37:** Partial-refund allocation and clawback on split payments where contract-specific bearing rules differ from proportional/default handling.
 
-📖 **Read the Full Submission:** [SUBMISSION.md](SUBMISSION.md)
+📖 **Read the Complete Official Submission:** [SUBMISSION.md](SUBMISSION.md)  
+🔍 **Read the Model Audit & Provenance Report:** [FINDINGS.md](FINDINGS.md)  
+🎬 **View the 3-Minute Demo Video Script:** [DEMO_SCRIPT.md](DEMO_SCRIPT.md)  
 
 ---
 
 ## Quickstart
 
-### 1. Launch the Interactive Settlement Simulator
-Experience the live contract interpreter, human confirmation gate, and side-by-side clawback comparison in your browser:
+### 1. Launch the Guided Settlement Simulator
+Experience the live 4-step contract interpreter, human confirmation gate, and side-by-side clawback comparison in your browser:
 ```bash
 streamlit run app.py
 ```
 
-### 2. Run the Test Suite (52 Passing Tests)
+### 2. Run the Full Test Suite (68 Passing Tests)
 ```bash
-python -m pytest -v
+pytest tests/ -v
 ```
 
-### 3. Run the Evaluation Benchmark
+### 3. Run the 3-Regime Benchmark Ladder
 ```bash
-python experiments/run_phase4_llm.py
+python experiments/run_ladder.py --regime all --llm-mode replay
+```
+
+### 4. Verify Cryptographic Manifest Checksums
+```bash
+python scripts/generate_manifest.py --verify
 ```
 
 ---
@@ -43,22 +50,21 @@ When a **partial refund** occurs (e.g., damaged transit goods, delayed courier, 
 
 ---
 
-## The Allocation Ladder (Empirical Proof)
+## The Benchmark Ladder (Empirical Proof)
 
-Our research adhered to the principle:
-> *Problem → Evidence → Root Cause → Decision → Hypothesis → Baseline → AI Necessity → Implementation → Evaluation.*
+The core justification for deploying an LLM is the collapse of deterministic pattern-matching when legal language departs from rigid boilerplate templates. Across 140 distinct agreements, regex accuracy collapses from **85.71%** on canonical phrasing down to **15.00%** on non-canonical phrasing.
 
-| Predictor | Exact Match (140 cases) | Match Rate | Error Gap |
-|---|---|---|---|
-| **R0: Default Baseline** | 40 / 140 | 28.57% | 71.43% |
-| **R1: Oracle Rule Ceiling** | 120 / 140 | **85.71%** | 0.00% (Ceiling) |
-| **R2: Regex Extractor (Tier B)** | 120 / 140 | **85.71%** | 0.00% (on Canonical) |
-| **R3: P37 LLM Extractor (Tier C)** | 120 / 140 | **85.71%** | **0.00% (Full Parity)** |
+### Full 140-Case Evaluation ($n=140$ Cases per Regime)
+| Evaluation Regime | Description | R0 (Default Naive) | R1 (Oracle Ceiling) | R2 (Regex Extractor) |
+| :--- | :--- | :---: | :---: | :---: |
+| **Regime A (Canonical)** | 100% standard contract template | 28.57% (40/140) | **85.71%** (120/140) | **85.71%** (120/140) |
+| **Regime B (Mixed)** | ~30% canonical, ~70% derived variants | 26.43% (37/140) | **85.71%** (120/140) | **42.14%** (59/140) |
+| **Regime C (Non-canonical)** | 100% derived natural language variants | 24.29% (34/140) | **85.71%** (120/140) | **15.00%** (21/140) |
 
-### Natural Language Complexity (Tier C):
-On 15 non-canonical contract clauses (synonyms, passive voice, negation, multi-clause precedence, amendments):
+### Natural Language Complexity (Tier C, $n=15$ clauses):
+On non-canonical contract clauses (synonyms, passive voice, negation, multi-clause precedence, amendments):
 - **Regex (R2):** 26.7% (4/15)
-- **P37 LLM (R3):** **100.0% (15/15)** (+73.3 pp improvement)
+- **P37 Live LLM (R3):** **93.3% (14/15)** (+66.6 pp improvement)
 - **Span Grounding Rate:** **100.0%** (15/15)
 - **Hallucination Rate:** **0.0%** (0/15)
 
@@ -67,8 +73,10 @@ On 15 non-canonical contract clauses (synonyms, passive voice, negation, multi-c
 ## Repository Structure
 
 ```
-├── app.py                     # Interactive Streamlit Demo & Clawback Simulator
+├── app.py                     # Guided 4-Step Streamlit Narrative & Clawback Simulator
 ├── SUBMISSION.md              # Razorpay AI Buildathon Submission Document
+├── FINDINGS.md                # Gate 1 Audit of MockLLMClient & Provenance Resolution
+├── DEMO_SCRIPT.md             # 3-minute shot-by-shot video presentation guide
 ├── src/p37/
 │   ├── benchmark/             # Independent Ground-Truth Generator & Boundary
 │   │   ├── generator.py       # Deterministic transaction generator
@@ -79,26 +87,22 @@ On 15 non-canonical contract clauses (synonyms, passive voice, negation, multi-c
 │       ├── allocator.py       # Integer-paise Hamiltonian allocator
 │       ├── extractor.py       # Canonical Tier-B regex extractor
 │       ├── human_gate.py      # Human-in-the-loop review & audit log
-│       ├── llm_client.py      # Mock, Gemini, and OpenAI client providers
+│       ├── llm_client.py      # Live Gemini Flash Lite & Mock providers
 │       ├── llm_extractor.py   # LLM extractor with source-span grounding
 │       ├── models.py          # StructuredRule and SourceSpan models
-│       └── tier_c_dataset.py  # 15 Tier-C failure-mode clauses
+│       └── tier_c_dataset.py  # Tier-C failure-mode clauses
 ├── experiments/               # Reproducible experiment runners & frozen results
-│   ├── run_tier_b.py          # Tier-B baseline evaluation
-│   ├── run_tier_c.py          # Phase-3 role-binding evaluation
-│   ├── run_phase4_llm.py      # Phase-4 LLM & human gate benchmark
-│   └── results/               # Frozen JSON output artifacts
-├── docs/                      # Milestone logs & specifications
-│   ├── BENCHMARK_SPEC.md
-│   ├── DETERMINISTIC_EXTRACTION_TIER_B.md
-│   ├── MILESTONE_LOG_PHASE3.md
-│   └── MILESTONE_LOG_PHASE4.md
-└── tests/                     # 52 Automated unit, safety & boundary tests
-    ├── test_benchmark_integrity.py
-    ├── test_tier_b_extraction.py
-    ├── test_tier_b_safety.py
-    ├── test_tier_c_role_binding.py
-    └── test_phase4_llm.py
+│   ├── run_ladder.py          # 3-regime benchmark ladder runner
+│   ├── run_phase4_llm.py      # Tier-C LLM & human gate benchmark
+│   └── results/               # Committed JSON artifacts & 113 live transcripts
+├── scripts/                   # Verification, manifest & economics scripts
+│   ├── calc_cost_latency.py   # Transcript-measured cost & latency calculator
+│   └── generate_manifest.py   # SHA-256 verification manifest generator
+└── tests/                     # 68 Automated unit, invariant, safety & boundary tests
+    ├── test_adversarial_injection.py
+    ├── test_ladder_invariants.py
+    ├── test_portability.py
+    └── ...
 ```
 
 ---

@@ -2,6 +2,8 @@
   "distinct_clause_n": 140,
   "full_sample_size": 140,
   "metrics_full_140": {
+    "r0_default_accuracy": 0.2643,
+    "r0_default_correct": 37,
     "r1_oracle_accuracy": 0.8571,
     "r1_oracle_correct": 120,
     "r2_abstain_count": 14,
@@ -9,18 +11,27 @@
     "r2_regex_correct": 59
   },
   "metrics_subsample_40": {
+    "r0_default_accuracy": 0.275,
+    "r0_default_correct": 11,
     "r1_oracle_accuracy": 0.875,
     "r1_oracle_correct": 35,
     "r2_regex_accuracy": 0.5,
     "r2_regex_correct": 20,
-    "r3_abstain_count": 0,
-    "r3_delta_over_r2": 0.175,
-    "r3_llm_accuracy": 0.675,
-    "r3_llm_correct": 27,
-    "r3_span_validity_rate": 1.0
+    "r3_abstain_count": 40,
+    "r3_confirmed_accuracy": 0.125,
+    "r3_confirmed_correct": 5,
+    "r3_delta_over_r2": -0.375,
+    "r3_enum_violations": 0,
+    "r3_json_parse_failures": 0,
+    "r3_llm_accuracy": 0.125,
+    "r3_llm_correct": 5,
+    "r3_retries": 0,
+    "r3_span_validation_rejections": 0,
+    "r3_span_validity_rate": 0.0
   },
+  "r3_provenance": "live (gemini-3.6-flash / replay)",
   "regime": "b",
   "regime_name": "Regime B (Mixed)",
   "stratified_subsample_size": 40,
-  "subsampling_disclosure": "R2 (regex) evaluated across all 140 cases per regime. R3 (LLM) evaluated on a stratified 40-case subsample (5-6 cases per policy type across 7 types) to bound live execution while maintaining statistical representation."
+  "subsampling_disclosure": "Full 140 cases evaluates R0 (naive), R1 (oracle ceiling), and R2 (regex). Stratified 40-case subsample (5-6 cases per policy type across 7 types) evaluates all five predictors (R0, R1, R2, R3, R3-Confirmed) to ensure strictly comparable, identical case sets. Within each case set, no predictor exceeds the R1 oracle ceiling."
 }

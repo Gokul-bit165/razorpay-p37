@@ -328,31 +328,93 @@ class MockLLMClient(LLMClient):
 
 
 class GeminiLLMClient(LLMClient):
-    """Client for Google Generative AI (Gemini)."""
+    """Client for Google Generative AI (Gemini) using standard library HTTP."""
 
-    def __init__(self, api_key: Optional[str] = None, model_name: str = "gemini-2.5-flash"):
-        self.api_key = api_key or os.environ.get("GEMINI_API_KEY")
-        if not self.api_key:
-            raise ValueError("GEMINI_API_KEY is not set.")
-        import google.generativeai as genai
-        genai.configure(api_key=self.api_key)
+    def __init__(self, api_key: Optional[str] = None, model_name: str = "gemini-3.5-flash-lite"):
+        key = api_key or os.environ.get("GEMINI_API_KEY")
+        if not key:
+            # Check for .env file in project root
+            env_file = Path(__file__).resolve().parents[3] / ".env"
+            if env_file.exists():
+                try:
+                    for line in env_file.read_text(encoding="utf-8").splitlines():
+                        if line.strip().startswith("GEMINI_API_KEY"):
+                            key = line.split("=", 1)[1].strip().strip('"').strip("'")
+                            break
+                except Exception:
+                    pass
+        if not key:
+            raise ValueError("GEMINI_API_KEY is not set in environment or .env file.")
+        self.api_key = key
         self.model_name = model_name
-        try:
-            self.model = genai.GenerativeModel(
-                model_name=model_name,
-                generation_config={"response_mime_type": "application/json"}
-            )
-        except Exception:
-            # Fallback to gemini-2.0-flash if SDK is on earlier release
-            self.model = genai.GenerativeModel(
-                model_name="gemini-2.0-flash",
-                generation_config={"response_mime_type": "application/json"}
-            )
+        self.last_usage: dict[str, Any] = {}
+        self.last_latency_ms: float = 0.0
 
     def generate_structured(self, system_prompt: str, user_prompt: str) -> dict[str, Any]:
-        prompt = f"{system_prompt}\n\nInput Agreement Text:\n{user_prompt}"
-        response = self.model.generate_content(prompt)
-        return json.loads(response.text)
+        import json
+        import time
+        import urllib.error
+        import urllib.request
+
+        combined_prompt = f"{system_prompt}\n\nInput Agreement Text:\n{user_prompt}"
+
+        candidates_models = [self.model_name]
+        if "gemini-3.5-flash-lite" not in candidates_models:
+            candidates_models.append("gemini-3.5-flash-lite")
+
+        last_err = None
+        for model in candidates_models:
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={self.api_key}"
+            payload = {
+                "contents": [
+                    {
+                        "parts": [
+                            {"text": combined_prompt}
+                        ]
+                    }
+                ],
+                "generationConfig": {
+                    "responseMimeType": "application/json",
+                    "temperature": 0.0,
+                },
+            }
+            data = json.dumps(payload).encode("utf-8")
+
+            for attempt in range(4):
+                req = urllib.request.Request(
+                    url,
+                    data=data,
+                    headers={"Content-Type": "application/json"},
+                )
+
+                t0 = time.perf_counter()
+                try:
+                    with urllib.request.urlopen(req, timeout=45) as resp:
+                        duration_ms = round((time.perf_counter() - t0) * 1000, 2)
+                        res_json = json.loads(resp.read().decode("utf-8"))
+                        self.last_latency_ms = duration_ms
+                        self.last_usage = res_json.get("usageMetadata", {})
+                        self.model_name = model
+                        text_content = res_json["candidates"][0]["content"]["parts"][0]["text"]
+                        return json.loads(text_content)
+                except urllib.error.HTTPError as e:
+                    err_body = e.read().decode("utf-8", errors="replace")
+                    if e.code == 404:
+                        last_err = f"HTTP 404 for {model}: {err_body}"
+                        break  # move to next model
+                    elif e.code in (429, 500, 502, 503, 504):
+                        last_err = f"HTTP {e.code} for {model}: {err_body}"
+                        # Exponential backoff retry
+                        backoff = 2.0 * (attempt + 1)
+                        time.sleep(backoff)
+                        continue
+                    raise RuntimeError(f"Gemini API HTTP Error {e.code}: {err_body}") from e
+                except Exception as e:
+                    last_err = str(e)
+                    time.sleep(2.0)
+                    continue
+
+        raise RuntimeError(f"All candidate Gemini models failed. Last error: {last_err}")
 
 
 class OpenAILLMClient(LLMClient):
@@ -386,6 +448,7 @@ class TranscriptReplayClient(LLMClient):
 
     In 'replay' mode (default for audited benchmarks), a cache miss raises a
     fatal RuntimeError to ensure zero un-audited or silently fabricated calls.
+    Transcripts are committed to experiments/results/llm_transcripts/.
     """
 
     def __init__(
@@ -397,7 +460,8 @@ class TranscriptReplayClient(LLMClient):
     ):
         import hashlib
         self.mode = mode.lower().strip()
-        self.cache_dir = Path(cache_dir) if cache_dir else Path(__file__).resolve().parents[3] / "experiments" / "transcripts"
+        default_cache = Path(__file__).resolve().parents[3] / "experiments" / "results" / "llm_transcripts"
+        self.cache_dir = Path(cache_dir) if cache_dir else default_cache
         self.underlying_client = underlying_client
         self.model_name = model_name
         self._hashlib = hashlib
@@ -421,6 +485,10 @@ class TranscriptReplayClient(LLMClient):
             return data["response"]
 
         elif self.mode == "record":
+            if cache_file.exists():
+                data = json.loads(cache_file.read_text(encoding="utf-8"))
+                return data["response"]
+
             if not self.underlying_client:
                 raise ValueError("underlying_client must be provided in record mode.")
             import time
@@ -428,11 +496,15 @@ class TranscriptReplayClient(LLMClient):
             resp = self.underlying_client.generate_structured(system_prompt, user_prompt)
             duration_ms = round((time.perf_counter() - t0) * 1000, 2)
 
+            usage = getattr(self.underlying_client, "last_usage", {})
+            actual_model = getattr(self.underlying_client, "model_name", self.model_name)
+
             self.cache_dir.mkdir(parents=True, exist_ok=True)
             record_data = {
                 "prompt_hash": phash,
-                "model": self.model_name,
+                "model": actual_model,
                 "latency_ms": duration_ms,
+                "usage": usage,
                 "system_prompt": system_prompt,
                 "user_prompt": user_prompt,
                 "response": resp,
@@ -457,7 +529,7 @@ def create_llm_client(
     Factory creating the appropriate LLM client based on requested mode.
     Modes:
       - 'mock': Deterministic MockLLMClient.
-      - 'live': Real Gemini client (requires GEMINI_API_KEY).
+      - 'live': Real Gemini client (reads GEMINI_API_KEY from env or .env).
       - 'record': Executes live Gemini calls and writes verified transcripts.
       - 'replay': Reads strictly from disk cache; fails fatally on miss.
     """
@@ -482,4 +554,5 @@ def create_llm_client(
         )
     else:
         raise ValueError(f"Unknown LLM client mode: {mode}. Supported: mock, live, record, replay.")
+
 

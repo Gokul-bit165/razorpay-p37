@@ -43,6 +43,7 @@ def compute_sha256(path: Path) -> str:
 def generate_manifest() -> dict:
     results_dir = REPO_ROOT / "experiments" / "results"
     transcripts_dir = REPO_ROOT / "experiments" / "transcripts"
+    llm_transcripts_dir = REPO_ROOT / "experiments" / "results" / "llm_transcripts"
     configs_dir = REPO_ROOT / "data" / "configs"
 
     manifest = {
@@ -59,9 +60,14 @@ def generate_manifest() -> dict:
             rel = f.relative_to(REPO_ROOT).as_posix()
             manifest["files"][rel] = compute_sha256(f)
 
-    # Transcript files
+    # Transcript files (legacy and llm_transcripts)
     if transcripts_dir.exists():
         for f in sorted(transcripts_dir.glob("*.json")):
+            rel = f.relative_to(REPO_ROOT).as_posix()
+            manifest["files"][rel] = compute_sha256(f)
+
+    if llm_transcripts_dir.exists():
+        for f in sorted(llm_transcripts_dir.glob("*.json")):
             rel = f.relative_to(REPO_ROOT).as_posix()
             manifest["files"][rel] = compute_sha256(f)
 

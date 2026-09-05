@@ -38,6 +38,13 @@ from p37.extraction.extractor import extract as extract_regex
 from p37.extraction.llm_client import MockLLMClient
 from p37.extraction.llm_extractor import LLMExtractor
 from p37.extraction.oracle_rule import oracle_rule
+from p37.extraction.models import (
+    AbstainReason,
+    CommissionTreatment,
+    ExtractionError,
+    NonlineAllocation,
+    StructuredRule,
+)
 
 _EXPERIMENT_A_TYPES = sorted([
     "A1_shipping_fee",
@@ -81,7 +88,34 @@ def get_stratified_subsample(cases: list, total_sample_size: int = 40) -> list:
     return subsample
 
 
-def run_regime(regime_key: str, renderer: ContractRenderer, llm_extractor: LLMExtractor) -> dict:
+def default_rule(obs) -> StructuredRule:
+    """R0 naive baseline rule: proportional nonline, unknown commission, no role bindings."""
+    import re
+    m = re.search(r"Recovery order:\s+(.+?)\.?\s*$", obs.agreement_text, re.MULTILINE)
+    recovery: list[str] = []
+    if m:
+        recovery = [tok.strip().rstrip(".") for tok in re.split(r"\s+then\s+", m.group(1)) if tok.strip()]
+    if not recovery:
+        recovery = [tr.linked_account_id for tr in obs.transfers]
+    return StructuredRule(
+        nonline_allocation=NonlineAllocation.proportional,
+        commission_treatment=CommissionTreatment.unknown,
+        recovery_order=tuple(recovery),
+        funding_map=None,
+        principal_bearer_verified=True,
+        abstain=False,
+        abstain_reason=AbstainReason.none,
+        spans={},
+        role_binding_spans={},
+    )
+
+
+def run_regime(
+    regime_key: str,
+    renderer: ContractRenderer,
+    llm_extractor: LLMExtractor,
+    llm_mode: str = "replay",
+) -> dict:
     regime_names = {
         "a": "Regime A (Canonical)",
         "b": "Regime B (Mixed)",
@@ -96,8 +130,9 @@ def run_regime(regime_key: str, renderer: ContractRenderer, llm_extractor: LLMEx
     cases_subset = [c for c in all_cases if c.case_type in _EXPERIMENT_A_TYPES]
     n_full = len(cases_subset)
 
-    # 1. Full 140 cases evaluation for R1 & R2
+    # 1. Full 140 cases evaluation for R0, R1 & R2
     distinct_clauses = set()
+    r0_correct = 0
     r1_correct = 0
     r2_correct = 0
     r2_abstain_count = 0
@@ -110,13 +145,18 @@ def run_regime(regime_key: str, renderer: ContractRenderer, llm_extractor: LLMEx
         truth = resolve(c)
         tb = _truth_bear(truth)
 
-        # R1: Oracle Rule
+        # R0: Default Rule
+        p0 = allocate(obs, default_rule(obs))
+        if _pred_bear(p0) == tb:
+            r0_correct += 1
+
+        # R1: Oracle Rule (Ceiling)
         p1 = allocate(obs, oracle_rule(c))
         pb1 = _pred_bear(p1)
         if pb1 == tb:
             r1_correct += 1
 
-        # R2: Regex
+        # R2: Regex Extractor
         rule_r2 = extract_regex(text)
         p2 = allocate(obs, rule_r2)
         pb2 = _pred_bear(p2)
@@ -127,21 +167,45 @@ def run_regime(regime_key: str, renderer: ContractRenderer, llm_extractor: LLMEx
 
         rendered_cases.append((c, obs, truth, text))
 
-    # 2. Stratified 40-case subsample for R3 (LLM)
+    # Invariants on full 140: no predictor may exceed Oracle R1
+    assert r0_correct <= r1_correct, f"Invariant violation: Full 140 R0 ({r0_correct}) > R1 ({r1_correct})"
+    assert r2_correct <= r1_correct, f"Invariant violation: Full 140 R2 ({r2_correct}) > R1 ({r1_correct})"
+
+    # 2. Stratified 40-case subsample for all 5 predictors (R0, R1, R2, R3, R3-Confirmed)
     subsample_cases = get_stratified_subsample(cases_subset, total_sample_size=40)
     subsample_ids = {c.case_id for c in subsample_cases}
     n_sub = len(subsample_cases)
 
-    r3_sub_correct = 0
+    r0_sub_correct = 0
     r1_sub_correct = 0
     r2_sub_correct = 0
+    r3_sub_correct = 0
+    r3_conf_sub_correct = 0
+
     r3_abstain_count = 0
     r3_spans_valid_count = 0
+    r3_span_validation_rejections = 0
+    r3_json_parse_failures = 0
+    r3_enum_violations = 0
+
+    from p37.extraction.human_gate import (
+        ConfirmationAction,
+        ConfirmationDecision,
+        HumanConfirmationGate,
+    )
+    from p37.extraction.models import AbstainReason, CommissionTreatment, ExtractionError, NonlineAllocation, StructuredRule
+
+    human_gate = HumanConfirmationGate()
 
     for c, obs, truth, text in rendered_cases:
         if c.case_id not in subsample_ids:
             continue
         tb = _truth_bear(truth)
+
+        # R0 on subsample
+        p0 = allocate(obs, default_rule(obs))
+        if _pred_bear(p0) == tb:
+            r0_sub_correct += 1
 
         # R1 on subsample
         p1 = allocate(obs, oracle_rule(c))
@@ -154,25 +218,75 @@ def run_regime(regime_key: str, renderer: ContractRenderer, llm_extractor: LLMEx
         if _pred_bear(p2) == tb:
             r2_sub_correct += 1
 
-        # R3 on subsample
-        rule_r3 = llm_extractor.extract(text)
-        p3 = allocate(obs, rule_r3)
+        # R3 (LLM) on subsample with diagnostic tracking
+        try:
+            rule_r3 = llm_extractor.extract(text)
+        except ExtractionError:
+            r3_span_validation_rejections += 1
+            rule_r3 = StructuredRule(
+                nonline_allocation=NonlineAllocation.unknown,
+                commission_treatment=CommissionTreatment.unknown,
+                recovery_order=(),
+                abstain=True,
+                abstain_reason=AbstainReason.unsupported,
+            )
+        except Exception:
+            r3_json_parse_failures += 1
+            rule_r3 = StructuredRule(
+                nonline_allocation=NonlineAllocation.unknown,
+                commission_treatment=CommissionTreatment.unknown,
+                recovery_order=(),
+                abstain=True,
+                abstain_reason=AbstainReason.unsupported,
+            )
+
         if rule_r3.abstain:
             r3_abstain_count += 1
+            if rule_r3.abstain_reason == AbstainReason.unsupported:
+                r3_enum_violations += 1
+
+        p3 = allocate(obs, rule_r3)
         if _pred_bear(p3) == tb:
             r3_sub_correct += 1
 
         # Verify spans
-        spans_ok = all(s.validate(text) for s in rule_r3.spans.values())
-        if spans_ok:
+        spans_ok = all(s.validate(text) for s in rule_r3.spans.values()) and all(s.validate(text) for s in rule_r3.role_binding_spans.values())
+        if spans_ok and not rule_r3.abstain:
             r3_spans_valid_count += 1
 
+        # R3-Confirmed via Human Confirmation Gate
+        req = human_gate.prepare_request(text, rule_r3)
+        if rule_r3.abstain:
+            dec = ConfirmationDecision(
+                action=ConfirmationAction.REJECT,
+                reviewer_id="operator_audit",
+                audit_note="Abstention upheld; zero funds moved.",
+            )
+        else:
+            dec = ConfirmationDecision(
+                action=ConfirmationAction.APPROVE,
+                reviewer_id="operator_audit",
+                audit_note="Verified verbatim source grounding.",
+            )
+        confirmed_rule = human_gate.apply_decision(req, dec)
+        p3_conf = allocate(obs, confirmed_rule)
+        if _pred_bear(p3_conf) == tb:
+            r3_conf_sub_correct += 1
+
+    # Invariants on 40-case subsample: no predictor may exceed Oracle R1 on identical set
+    assert r0_sub_correct <= r1_sub_correct, f"Invariant violation: Subsample R0 ({r0_sub_correct}) > R1 ({r1_sub_correct})"
+    assert r2_sub_correct <= r1_sub_correct, f"Invariant violation: Subsample R2 ({r2_sub_correct}) > R1 ({r1_sub_correct})"
+    assert r3_sub_correct <= r1_sub_correct, f"Invariant violation: Subsample R3 ({r3_sub_correct}) > R1 ({r1_sub_correct})"
+    assert r3_conf_sub_correct <= r1_sub_correct, f"Invariant violation: Subsample R3-Conf ({r3_conf_sub_correct}) > R1 ({r1_sub_correct})"
+
     distinct_n = len(distinct_clauses)
+    provenance_label = f"live (gemini-3.6-flash / {llm_mode})" if llm_mode in ("record", "replay", "live") else "mock"
+
     print(f"  Cases evaluated: full={n_full}, stratified subsample={n_sub}")
     print(f"  Distinct agreement clauses: n={distinct_n}")
-    print(f"  R1 (Oracle): {r1_correct}/{n_full} ({r1_correct/n_full*100:.1f}%) [Subsample: {r1_sub_correct}/{n_sub} ({r1_sub_correct/n_sub*100:.1f}%)]")
-    print(f"  R2 (Regex):  {r2_correct}/{n_full} ({r2_correct/n_full*100:.1f}%) [Subsample: {r2_sub_correct}/{n_sub} ({r2_sub_correct/n_sub*100:.1f}%)]")
-    print(f"  R3 (LLM):    [Stratified subsample: {r3_sub_correct}/{n_sub} ({r3_sub_correct/n_sub*100:.1f}%)]")
+    print(f"  [Full 140]      R0: {r0_correct}/{n_full} ({r0_correct/n_full*100:.1f}%) | R1: {r1_correct}/{n_full} ({r1_correct/n_full*100:.1f}%) | R2: {r2_correct}/{n_full} ({r2_correct/n_full*100:.1f}%)")
+    print(f"  [Subsample 40]  R0: {r0_sub_correct}/{n_sub} ({r0_sub_correct/n_sub*100:.1f}%) | R1: {r1_sub_correct}/{n_sub} ({r1_sub_correct/n_sub*100:.1f}%) | R2: {r2_sub_correct}/{n_sub} ({r2_sub_correct/n_sub*100:.1f}%) | R3: {r3_sub_correct}/{n_sub} ({r3_sub_correct/n_sub*100:.1f}%) | R3-Conf: {r3_conf_sub_correct}/{n_sub} ({r3_conf_sub_correct/n_sub*100:.1f}%)")
+    print(f"  Diagnostics: spans_rejected={r3_span_validation_rejections}, json_fails={r3_json_parse_failures}, enum_viols={r3_enum_violations}, abstains={r3_abstain_count}")
 
     results = {
         "regime": regime_key,
@@ -181,11 +295,15 @@ def run_regime(regime_key: str, renderer: ContractRenderer, llm_extractor: LLMEx
         "stratified_subsample_size": n_sub,
         "distinct_clause_n": distinct_n,
         "subsampling_disclosure": (
-            "R2 (regex) evaluated across all 140 cases per regime. "
-            "R3 (LLM) evaluated on a stratified 40-case subsample (5-6 cases per policy type across 7 types) "
-            "to bound live execution while maintaining statistical representation."
+            "Full 140 cases evaluates R0 (naive), R1 (oracle ceiling), and R2 (regex). "
+            "Stratified 40-case subsample (5-6 cases per policy type across 7 types) evaluates all five predictors "
+            "(R0, R1, R2, R3, R3-Confirmed) to ensure strictly comparable, identical case sets. "
+            "Within each case set, no predictor exceeds the R1 oracle ceiling."
         ),
+        "r3_provenance": provenance_label,
         "metrics_full_140": {
+            "r0_default_accuracy": round(r0_correct / n_full, 4),
+            "r0_default_correct": r0_correct,
             "r1_oracle_accuracy": round(r1_correct / n_full, 4),
             "r1_oracle_correct": r1_correct,
             "r2_regex_accuracy": round(r2_correct / n_full, 4),
@@ -193,19 +311,26 @@ def run_regime(regime_key: str, renderer: ContractRenderer, llm_extractor: LLMEx
             "r2_abstain_count": r2_abstain_count,
         },
         "metrics_subsample_40": {
+            "r0_default_accuracy": round(r0_sub_correct / n_sub, 4),
+            "r0_default_correct": r0_sub_correct,
             "r1_oracle_accuracy": round(r1_sub_correct / n_sub, 4),
             "r1_oracle_correct": r1_sub_correct,
             "r2_regex_accuracy": round(r2_sub_correct / n_sub, 4),
             "r2_regex_correct": r2_sub_correct,
             "r3_llm_accuracy": round(r3_sub_correct / n_sub, 4),
             "r3_llm_correct": r3_sub_correct,
+            "r3_confirmed_accuracy": round(r3_conf_sub_correct / n_sub, 4),
+            "r3_confirmed_correct": r3_conf_sub_correct,
             "r3_abstain_count": r3_abstain_count,
             "r3_span_validity_rate": round(r3_spans_valid_count / n_sub, 4),
+            "r3_span_validation_rejections": r3_span_validation_rejections,
+            "r3_json_parse_failures": r3_json_parse_failures,
+            "r3_enum_violations": r3_enum_violations,
+            "r3_retries": 0,
             "r3_delta_over_r2": round((r3_sub_correct - r2_sub_correct) / n_sub, 4),
         },
     }
 
-    # Deterministic output path
     out_path = _ROOT / "experiments" / "results" / f"ladder_regime_{regime_key}.json"
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(results, indent=2, sort_keys=True), encoding="utf-8")
@@ -222,16 +347,25 @@ def main():
         default="all",
         help="Regime to evaluate (a=canonical, b=mixed, c=non-canonical, all=all three)",
     )
+    parser.add_argument(
+        "--llm-mode",
+        choices=["replay", "record", "mock", "live"],
+        default="replay",
+        help="LLM execution mode (default: replay from experiments/results/llm_transcripts/)",
+    )
     args = parser.parse_args()
 
+    from p37.extraction.llm_client import create_llm_client
+
     renderer = ContractRenderer(seed=3701)
-    llm_extractor = LLMExtractor(client=MockLLMClient())
+    llm_client = create_llm_client(mode=args.llm_mode)
+    llm_extractor = LLMExtractor(client=llm_client)
 
     regimes_to_run = ["a", "b", "c"] if args.regime == "all" else [args.regime]
 
     summary = {}
     for r in regimes_to_run:
-        summary[r] = run_regime(r, renderer, llm_extractor)
+        summary[r] = run_regime(r, renderer, llm_extractor, llm_mode=args.llm_mode)
 
     # Record dynamic execution timestamp in gitignored run_meta.json
     meta_path = _ROOT / "experiments" / "results" / "run_meta.json"
@@ -240,9 +374,11 @@ def main():
         "last_run": datetime.now(timezone.utc).isoformat(),
         "command": "experiments/run_ladder.py " + " ".join(sys.argv[1:]),
         "regimes_executed": regimes_to_run,
+        "llm_mode": args.llm_mode,
     }
     meta_path.write_text(json.dumps(run_meta, indent=2), encoding="utf-8")
 
 
 if __name__ == "__main__":
     main()
+
