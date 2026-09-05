@@ -1,2 +1,5 @@
 # razorpay-p37 runtime dependencies
 # Core allocation and extraction engine uses Python 3.13 standard library (dataclasses, enum, etc.)
+# The two packages below are only needed to run the Streamlit demo (app.py).
+streamlit>=1.30.0
+pandas>=2.0.0
