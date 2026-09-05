@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "razorpay-p37"
+version = "0.1.0"
+description = "Razorpay Route partial-refund clawback allocation and extraction engine"
+readme = "README.md"
+requires-python = ">=3.13"
+license = { text = "Proprietary" }
+authors = [
+    { name = "P37 Authors" }
+]
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+]
+demo = [
+    "streamlit>=1.30.0",
+]
+llm = [
+    "google-generativeai>=0.8.0",
+    "openai>=1.0.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]

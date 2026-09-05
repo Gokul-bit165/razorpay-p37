@@ -1,15 +1,15 @@
 # Razorpay Route · P37 Split Clawback Engine
 
-[![Tests: 52 Passed](https://img.shields.io/badge/Tests-52%20Passed%20(100%25)-success)](file:///c:/Users/gokul/razorpay-p37/tests)
-[![Precision: Integer-Paise](https://img.shields.io/badge/Precision-Integer--Paise%20(No%20Float%20Drift)-blue)](file:///c:/Users/gokul/razorpay-p37/src/p37/extraction/allocator.py)
-[![Grounding: Verbatim Spans](https://img.shields.io/badge/Grounding-100%25%20Verbatim%20Spans-brightgreen)](file:///c:/Users/gokul/razorpay-p37/src/p37/extraction/llm_extractor.py)
-[![Hallucinations: 0.0%](https://img.shields.io/badge/Hallucinations-0.0%25-green)](file:///c:/Users/gokul/razorpay-p37/experiments/results/phase4_llm_extraction.json)
+[![Tests: 52 Passed](https://img.shields.io/badge/Tests-52%20Passed%20(100%25)-success)](tests)
+[![Precision: Integer-Paise](https://img.shields.io/badge/Precision-Integer--Paise%20(No%20Float%20Drift)-blue)](src/p37/extraction/allocator.py)
+[![Grounding: Verbatim Spans](https://img.shields.io/badge/Grounding-100%25%20Verbatim%20Spans-brightgreen)](src/p37/extraction/llm_extractor.py)
+[![Hallucinations: 0.0%](https://img.shields.io/badge/Hallucinations-0.0%25-green)](experiments/results/phase4_llm_extraction.json)
 
 **Research-first prototype for the Razorpay AI Buildathon.**
 
 **Problem P37:** Partial-refund allocation and clawback on split payments where contract-specific bearing rules differ from proportional/default handling.
 
-📖 **Read the Full Submission:** [SUBMISSION.md](file:///c:/Users/gokul/razorpay-p37/SUBMISSION.md)
+📖 **Read the Full Submission:** [SUBMISSION.md](SUBMISSION.md)
 
 ---
 

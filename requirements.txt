@@ -1,0 +1,2 @@
+# razorpay-p37 runtime dependencies
+# Core allocation and extraction engine uses Python 3.13 standard library (dataclasses, enum, etc.)
