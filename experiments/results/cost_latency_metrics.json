@@ -1,0 +1,28 @@
+{
+  "financial_cost_per_1000_contracts": {
+    "cost_per_single_contract_inr": 0.0083,
+    "hybrid_savings_percentage": 70.0,
+    "p37_hybrid_cost_inr": 2.5,
+    "pure_llm_cost_inr": 8.35,
+    "pure_llm_cost_usd": 0.0965
+  },
+  "latency_profile_ms": {
+    "hybrid_effective_p50_ms": 93.0,
+    "llm_p50_ms": 310,
+    "llm_p95_ms": 640,
+    "llm_p99_ms": 910,
+    "regex_p50_ms": 0.05
+  },
+  "pricing_model": {
+    "input_price_per_1m_tokens_usd": 0.1,
+    "output_price_per_1m_tokens_usd": 0.4,
+    "target_llm": "gemini-2.5-flash",
+    "usd_to_inr_exchange_rate": 86.5
+  },
+  "summary": "At \u20b98.35 per 1,000 contracts for pure LLM and \u20b92.50 per 1,000 contracts under P37's hybrid architecture, contract-aware clawback resolution costs less than \u20b90.01 per contract while protecting tens of thousands of rupees in merchant balance leakage.",
+  "token_footprint_per_contract": {
+    "avg_input_tokens": 465,
+    "avg_output_tokens": 125,
+    "total_tokens": 590
+  }
+}

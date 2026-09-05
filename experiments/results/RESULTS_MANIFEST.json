@@ -1,13 +1,15 @@
 {
   "files": {
     "data/configs/gen_val.json": "d4b416d891665ef9409e6f1e0f1e9be69fbfa84ff7dd48a0a7da73f5b9e0f86f",
+    "experiments/results/cost_latency_metrics.json": "c755704f70b1a31e68e19a3ba7bd697a09fb513eb313cb1692efb7c0fa0859d6",
     "experiments/results/deterministic_tier_b.json": "105dab5f45929e72c7bc76d139e99f87d63b2feffbb675f9b5324a0abf60b002",
+    "experiments/results/grounding_ablation.json": "ababdb3e68d8dc77199302c4b9888a6890fda2c29173123bf0d4c5fb95d1705a",
     "experiments/results/ladder_regime_a.json": "1337878e7b96ec8a1af0b0d93808332119bb119c217345b10a0267a1b494ba2c",
     "experiments/results/ladder_regime_b.json": "a35660de987fba483fd1dac6d6800ddd18a6ddf3c6aa25ef6deb92877029ce18",
     "experiments/results/ladder_regime_c.json": "e0617fb50c28d92d627c010ea3bca61efb027f6ebf636f01c8e990c977aae048",
     "experiments/results/phase4_llm_extraction.json": "8d97253a9afc3b42fe490222eb4af01c82344741aa9b983e1caad01bdf591114",
     "experiments/results/role_bound_tier_c.json": "b8bcc3057265df8b4bdc6a6b2e86e921a935b6d392ddabbc83bad6869a3cf176"
   },
-  "git_commit_sha": "2d52804cbda705bdec1881e1733d552b123ea99b",
+  "git_commit_sha": "34077f1369fab53739af8891a59ae74655cebccd",
   "manifest_version": "1.0"
 }

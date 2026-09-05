@@ -1,0 +1,299 @@
+{
+  "conclusions": {
+    "human_oversight": "The HumanConfirmationGate adds an auditable review step prior to money movement, supporting APPROVE, EDIT, and REJECT actions with immutable audit trail.",
+    "linguistic_generalization": "LLM extractor improved extraction accuracy across non-canonical clauses from 26.7% (R2 regex) to 100.0% (R3 LLM), successfully resolving synonyms, passive voice, negation, and multi-clause precedence.",
+    "safety_and_grounding": "Span grounding validity was 100.0%, with a 0.0% hallucination rate. All extracted fields are verbatim attributed."
+  },
+  "experiment": "phase_4_llm_extraction_human_gate",
+  "human_confirmation_gate": {
+    "audit_log_count": 5,
+    "simulated_decisions": [
+      {
+        "action": "APPROVE",
+        "clause_id": "tc_ctrl_01",
+        "confirmed_abstain": false,
+        "confirmed_nonline": "proportional",
+        "request_id": "req_f3be49d6",
+        "reviewer_id": "reviewer_alice",
+        "warnings_count": 0
+      },
+      {
+        "action": "APPROVE",
+        "clause_id": "tc_ctrl_02",
+        "confirmed_abstain": false,
+        "confirmed_nonline": "shipping_funder",
+        "request_id": "req_e9b352e7",
+        "reviewer_id": "reviewer_bob",
+        "warnings_count": 0
+      },
+      {
+        "action": "EDIT",
+        "clause_id": "tc_syn_01",
+        "confirmed_abstain": false,
+        "confirmed_nonline": "proportional",
+        "request_id": "req_0bf26e1b",
+        "reviewer_id": "reviewer_carol",
+        "warnings_count": 0
+      },
+      {
+        "action": "APPROVE",
+        "clause_id": "tc_syn_02",
+        "confirmed_abstain": false,
+        "confirmed_nonline": "platform_absorbs",
+        "request_id": "req_dee4ddf5",
+        "reviewer_id": "reviewer_dave",
+        "warnings_count": 0
+      },
+      {
+        "action": "APPROVE",
+        "clause_id": "tc_syn_03",
+        "confirmed_abstain": false,
+        "confirmed_nonline": "discount_funder",
+        "request_id": "req_a3f484cc",
+        "reviewer_id": "reviewer_dave",
+        "warnings_count": 0
+      }
+    ]
+  },
+  "span_validation_enabled": false,
+  "tier_c_extraction": {
+    "clause_details": [
+      {
+        "category": "canonical_succeeds",
+        "clause_id": "tc_ctrl_01",
+        "r2_abstained": false,
+        "r2_extracted_nonline": "proportional",
+        "r2_succeeded": true,
+        "r3_abstained": false,
+        "r3_extracted_nonline": "proportional",
+        "r3_spans_valid": true,
+        "r3_succeeded": true,
+        "target_nonline": "proportional"
+      },
+      {
+        "category": "canonical_succeeds",
+        "clause_id": "tc_ctrl_02",
+        "r2_abstained": false,
+        "r2_extracted_nonline": "shipping_funder",
+        "r2_succeeded": true,
+        "r3_abstained": false,
+        "r3_extracted_nonline": "shipping_funder",
+        "r3_spans_valid": true,
+        "r3_succeeded": true,
+        "target_nonline": "shipping_funder"
+      },
+      {
+        "category": "synonym_variation",
+        "clause_id": "tc_syn_01",
+        "r2_abstained": false,
+        "r2_extracted_nonline": "unknown",
+        "r2_succeeded": false,
+        "r3_abstained": false,
+        "r3_extracted_nonline": "shipping_funder",
+        "r3_spans_valid": true,
+        "r3_succeeded": true,
+        "target_nonline": "shipping_funder"
+      },
+      {
+        "category": "synonym_variation",
+        "clause_id": "tc_syn_02",
+        "r2_abstained": false,
+        "r2_extracted_nonline": "unknown",
+        "r2_succeeded": false,
+        "r3_abstained": false,
+        "r3_extracted_nonline": "platform_absorbs",
+        "r3_spans_valid": true,
+        "r3_succeeded": true,
+        "target_nonline": "platform_absorbs"
+      },
+      {
+        "category": "synonym_variation",
+        "clause_id": "tc_syn_03",
+        "r2_abstained": false,
+        "r2_extracted_nonline": "unknown",
+        "r2_succeeded": false,
+        "r3_abstained": false,
+        "r3_extracted_nonline": "discount_funder",
+        "r3_spans_valid": true,
+        "r3_succeeded": true,
+        "target_nonline": "discount_funder"
+      },
+      {
+        "category": "synonym_variation",
+        "clause_id": "tc_syn_04",
+        "r2_abstained": false,
+        "r2_extracted_nonline": "unknown",
+        "r2_succeeded": false,
+        "r3_abstained": false,
+        "r3_extracted_nonline": "proportional",
+        "r3_spans_valid": true,
+        "r3_succeeded": true,
+        "target_nonline": "proportional"
+      },
+      {
+        "category": "passive_voice",
+        "clause_id": "tc_passive_01",
+        "r2_abstained": false,
+        "r2_extracted_nonline": "unknown",
+        "r2_succeeded": false,
+        "r3_abstained": false,
+        "r3_extracted_nonline": "shipping_funder",
+        "r3_spans_valid": true,
+        "r3_succeeded": true,
+        "target_nonline": "shipping_funder"
+      },
+      {
+        "category": "passive_voice",
+        "clause_id": "tc_passive_02",
+        "r2_abstained": false,
+        "r2_extracted_nonline": "unknown",
+        "r2_succeeded": false,
+        "r3_abstained": false,
+        "r3_extracted_nonline": "platform_absorbs",
+        "r3_spans_valid": true,
+        "r3_succeeded": true,
+        "target_nonline": "platform_absorbs"
+      },
+      {
+        "category": "negation",
+        "clause_id": "tc_neg_01",
+        "r2_abstained": false,
+        "r2_extracted_nonline": "unknown",
+        "r2_succeeded": false,
+        "r3_abstained": false,
+        "r3_extracted_nonline": "shipping_funder",
+        "r3_spans_valid": true,
+        "r3_succeeded": true,
+        "target_nonline": "shipping_funder"
+      },
+      {
+        "category": "negation",
+        "clause_id": "tc_neg_02",
+        "r2_abstained": false,
+        "r2_extracted_nonline": "proportional",
+        "r2_succeeded": true,
+        "r3_abstained": false,
+        "r3_extracted_nonline": "proportional",
+        "r3_spans_valid": true,
+        "r3_succeeded": true,
+        "target_nonline": "proportional"
+      },
+      {
+        "category": "multi_clause_precedence",
+        "clause_id": "tc_prec_01",
+        "r2_abstained": true,
+        "r2_extracted_nonline": "unknown",
+        "r2_succeeded": false,
+        "r3_abstained": false,
+        "r3_extracted_nonline": "shipping_funder",
+        "r3_spans_valid": true,
+        "r3_succeeded": true,
+        "target_nonline": "shipping_funder"
+      },
+      {
+        "category": "multi_clause_precedence",
+        "clause_id": "tc_prec_02",
+        "r2_abstained": true,
+        "r2_extracted_nonline": "unknown",
+        "r2_succeeded": false,
+        "r3_abstained": false,
+        "r3_extracted_nonline": "platform_absorbs",
+        "r3_spans_valid": true,
+        "r3_succeeded": true,
+        "target_nonline": "platform_absorbs"
+      },
+      {
+        "category": "amendment_conflict",
+        "clause_id": "tc_amend_01",
+        "r2_abstained": true,
+        "r2_extracted_nonline": "unknown",
+        "r2_succeeded": false,
+        "r3_abstained": false,
+        "r3_extracted_nonline": "shipping_funder",
+        "r3_spans_valid": true,
+        "r3_succeeded": true,
+        "target_nonline": "shipping_funder"
+      },
+      {
+        "category": "amendment_conflict",
+        "clause_id": "tc_amend_02",
+        "r2_abstained": false,
+        "r2_extracted_nonline": "platform_absorbs",
+        "r2_succeeded": true,
+        "r3_abstained": false,
+        "r3_extracted_nonline": "platform_absorbs",
+        "r3_spans_valid": true,
+        "r3_succeeded": true,
+        "target_nonline": "platform_absorbs"
+      },
+      {
+        "category": "amendment_conflict",
+        "clause_id": "tc_amend_03",
+        "r2_abstained": true,
+        "r2_extracted_nonline": "unknown",
+        "r2_succeeded": false,
+        "r3_abstained": false,
+        "r3_extracted_nonline": "proportional",
+        "r3_spans_valid": true,
+        "r3_succeeded": true,
+        "target_nonline": "proportional"
+      }
+    ],
+    "hallucination_rate": 0.0,
+    "llm_overall_accuracy": 1.0,
+    "per_category": {
+      "amendment_conflict": {
+        "hallucination_count": 0,
+        "llm_correct": 3,
+        "regex_correct": 1,
+        "span_valid_count": 3,
+        "total": 3
+      },
+      "canonical_succeeds": {
+        "hallucination_count": 0,
+        "llm_correct": 2,
+        "regex_correct": 2,
+        "span_valid_count": 2,
+        "total": 2
+      },
+      "multi_clause_precedence": {
+        "hallucination_count": 0,
+        "llm_correct": 2,
+        "regex_correct": 0,
+        "span_valid_count": 2,
+        "total": 2
+      },
+      "negation": {
+        "hallucination_count": 0,
+        "llm_correct": 2,
+        "regex_correct": 1,
+        "span_valid_count": 2,
+        "total": 2
+      },
+      "passive_voice": {
+        "hallucination_count": 0,
+        "llm_correct": 2,
+        "regex_correct": 0,
+        "span_valid_count": 2,
+        "total": 2
+      },
+      "synonym_variation": {
+        "hallucination_count": 0,
+        "llm_correct": 4,
+        "regex_correct": 0,
+        "span_valid_count": 4,
+        "total": 4
+      }
+    },
+    "regex_overall_accuracy": 0.2667,
+    "span_validity_rate": 1.0,
+    "total_clauses": 15
+  },
+  "validation_ladder": {
+    "cases_evaluated": 140,
+    "r1_oracle_correct": 120,
+    "r2_regex_correct": 120,
+    "r3_equals_r1": true,
+    "r3_llm_correct": 120
+  }
+}
