@@ -1,0 +1,26 @@
+{
+  "distinct_clause_n": 140,
+  "full_sample_size": 140,
+  "metrics_full_140": {
+    "r1_oracle_accuracy": 0.8571,
+    "r1_oracle_correct": 120,
+    "r2_abstain_count": 0,
+    "r2_regex_accuracy": 0.8571,
+    "r2_regex_correct": 120
+  },
+  "metrics_subsample_40": {
+    "r1_oracle_accuracy": 0.875,
+    "r1_oracle_correct": 35,
+    "r2_regex_accuracy": 0.875,
+    "r2_regex_correct": 35,
+    "r3_abstain_count": 0,
+    "r3_delta_over_r2": 0.0,
+    "r3_llm_accuracy": 0.875,
+    "r3_llm_correct": 35,
+    "r3_span_validity_rate": 1.0
+  },
+  "regime": "a",
+  "regime_name": "Regime A (Canonical)",
+  "stratified_subsample_size": 40,
+  "subsampling_disclosure": "R2 (regex) evaluated across all 140 cases per regime. R3 (LLM) evaluated on a stratified 40-case subsample (5-6 cases per policy type across 7 types) to bound live execution while maintaining statistical representation."
+}

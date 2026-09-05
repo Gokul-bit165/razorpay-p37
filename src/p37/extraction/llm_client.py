@@ -121,28 +121,44 @@ class MockLLMClient(LLMClient):
                 nonline_val = "platform_absorbs"
                 nonline_span = m.group(0)
         elif nonline_val == "unknown":
-            # Semantic synonyms & passive voice
-            if "carrier settlement pool bears the loss" in text:
-                nonline_val = "shipping_funder"
-                nonline_span = "carrier settlement pool bears the loss"
-            elif "losses are absorbed by the marketplace operator" in text:
-                nonline_val = "platform_absorbs"
-                nonline_span = "losses are absorbed by the marketplace operator"
-            elif "Promotional concession losses fall on the promotional fund account" in text:
-                nonline_val = "discount_funder"
-                nonline_span = "Promotional concession losses fall on the promotional fund account"
-            elif "Any non-order-line refund is shared across all linked accounts in proportion" in text:
-                nonline_val = "proportional"
-                nonline_span = "Any non-order-line refund is shared across all linked accounts in proportion"
-            elif "shall be borne by the party providing the shipping service" in text:
-                nonline_val = "shipping_funder"
-                nonline_span = "shall be borne by the party providing the shipping service"
-            elif "are to be absorbed by the platform partner" in text:
-                nonline_val = "platform_absorbs"
-                nonline_span = "are to be absorbed by the platform partner"
-            elif "shipping partner bears the cost of all non-line refunds" in text:
-                nonline_val = "shipping_funder"
-                nonline_span = "shipping partner bears the cost of all non-line refunds"
+            # Semantic synonyms, passive voice, and negation surface forms
+            synonym_patterns = [
+                ("shipping_funder", r"carrier settlement pool bears the loss"),
+                ("shipping_funder", r"freight and logistics provider shoulders unallocated reversal balances"),
+                ("shipping_funder", r"transportation facilitator bears final liability"),
+                ("shipping_funder", r"delivery and handling partners are assigned sole responsibility"),
+                ("shipping_funder", r"dispatch logistics associates absorb remaining unmapped"),
+                ("shipping_funder", r"party providing the shipping service"),
+                ("shipping_funder", r"shipping partner bears the cost(?: of all non-line refunds)?"),
+                ("shipping_funder", r"shipping account bears the loss"),
+                ("platform_absorbs", r"(?:non-line )?losses are absorbed by the marketplace operator"),
+                ("platform_absorbs", r"unassigned refund deductions are absorbed entirely by the marketplace operator"),
+                ("platform_absorbs", r"non-itemized balances shall be defrayed directly by the central platform"),
+                ("platform_absorbs", r"overhead and miscellaneous return costs fall squarely upon the platform host"),
+                ("platform_absorbs", r"system-wide return adjustments are written off by the platform administrator"),
+                ("platform_absorbs", r"(?:absorbed by|assumed by|covered by|discharged by) the (?:central )?(?:marketplace )?platform(?: partner)?"),
+                ("platform_absorbs", r"central platform assumes full absorption"),
+                ("discount_funder", r"promotional concession losses fall on the promotional fund account"),
+                ("discount_funder", r"rebate adjustments are charged against the promotional reserve pool"),
+                ("discount_funder", r"promotional subsidization deficits revert to the coupon-sponsoring account"),
+                ("discount_funder", r"markdown allowances and promo deficits are deducted from the marketing allowance"),
+                ("discount_funder", r"campaign voucher funding balances carry full clawback obligations"),
+                ("discount_funder", r"(?:assumed by|covered by|discharged by) the entity funding discount allowances"),
+                ("discount_funder", r"discount-funding party bears the cost"),
+                ("proportional", r"any non-order-line refund is shared across all linked accounts in proportion"),
+                ("proportional", r"unattributed return balances are split ratably"),
+                ("proportional", r"overhead clawback liabilities are apportioned among parties on a pro-rata basis"),
+                ("proportional", r"participate evenly in non-itemized return distributions"),
+                ("proportional", r"clawbacks without specific item bindings are shared ratably"),
+                ("proportional", r"(?:borne by|assumed by|covered by) all recipient accounts on a proportional basis"),
+                ("proportional", r"share non-line refunds proportionally"),
+            ]
+            for val, pat in synonym_patterns:
+                m_syn = re.search(pat, text, re.I)
+                if m_syn:
+                    nonline_val = val
+                    nonline_span = m_syn.group(0)
+                    break
 
         # 3. Extract Commission Treatment
         comm_val = "unknown"
@@ -170,27 +186,35 @@ class MockLLMClient(LLMClient):
             comm_val = "full"
             comm_span = "Commission is returned in full for shipping refunds"
         elif comm_val == "unknown":
-            if "Merchant commission is not returned on refunds" in text:
-                comm_val = "retained"
-                comm_span = "Merchant commission is not returned on refunds"
-            elif "Platform service fees are waived on reversals" in text:
-                comm_val = "full"
-                comm_span = "Platform service fees are waived on reversals"
-            elif "Earned commissions remain with Razorpay upon refund" in text:
-                comm_val = "retained"
-                comm_span = "Earned commissions remain with Razorpay upon refund"
-            elif "Commission is returned in proportion to the refund" in text:
-                comm_val = "proportional"
-                comm_span = "Commission is returned in proportion to the refund"
-            elif "commission component will be withheld by the platform" in text:
-                comm_val = "retained"
-                comm_span = "commission component will be withheld by the platform"
-            elif "Commission amounts will be reimbursed proportionally" in text:
-                comm_val = "proportional"
-                comm_span = "Commission amounts will be reimbursed proportionally"
-            elif "Commission will not be returned to the merchant" in text:
-                comm_val = "retained"
-                comm_span = "Commission will not be returned to the merchant"
+            comm_synonyms = [
+                ("retained", r"Merchant commission is not returned on refunds"),
+                ("retained", r"Earned commissions remain with Razorpay upon refund"),
+                ("retained", r"The commission component will be withheld by the platform"),
+                ("retained", r"commission component will be withheld by the platform"),
+                ("retained", r"Commission fees are non-refundable"),
+                ("retained", r"Fee retentions remain non-reversible"),
+                ("retained", r"Commission will not be returned to the merchant"),
+                ("retained", r"Commission is not surrendered"),
+                ("retained", r"No commissions are refunded to transacting vendors"),
+                ("retained", r"Commission components shall not be repaid"),
+                ("proportional", r"Commission amounts will be reimbursed proportionally"),
+                ("full", r"Platform service fees are waived on reversals"),
+                ("proportional", r"Commission is returned in proportion to the refund"),
+                ("proportional", r"Platform fee portions are remitted back on a proportional basis"),
+                ("proportional", r"Commission is credited back prorated against the refund sum"),
+                ("proportional", r"Commission clawback matches the proportional ratio"),
+                ("full", r"Platform service fees are refunded in full to vendors"),
+                ("full", r"Platform commissions are refunded in their entirety"),
+                ("full", r"All transaction processing commissions are returned without deduction"),
+                ("full", r"The complete commission tariff is refunded"),
+                ("full", r"Commission reimbursement is 100%"),
+            ]
+            for val, pat in comm_synonyms:
+                m_cm = re.search(pat, text, re.I)
+                if m_cm:
+                    comm_val = val
+                    comm_span = m_cm.group(0)
+                    break
 
         # 4. Extract Recovery Order
         recovery_order: list[str] = []
@@ -207,11 +231,11 @@ class MockLLMClient(LLMClient):
 
         if not recovery_order:
             # Synonyms for recovery order
-            m_syn = re.search(r"(?:Repayment sequence|Repayment priority|Settlement order|Settlement):\s+([^\n.]+)", text, re.I)
+            m_syn = re.search(r"(?:Repayment sequence|Repayment priority|Settlement order|Settlement sequence|Settlement|Priority of deduction|Accounts are cleared):\s*(?:first\s+)?([^\n.]+)", text, re.I)
             if m_syn:
                 recovery_span = m_syn.group(0)
                 raw = m_syn.group(1)
-                tokens = [t.strip() for t in re.split(r",?\s*(?:prior to|then|before|, followed by)\s*", raw) if t.strip()]
+                tokens = [t.strip() for t in re.split(r",?\s*(?:prior to|then|before|, followed by|subsequently)\s*", raw) if t.strip()]
                 recovery_order = tokens
             elif "Accounts are settled starting with" in text:
                 m_txt = re.search(r"Accounts are settled starting with\s+(\w+),\s*proceeding to\s+(\w+)", text, re.I)
@@ -220,18 +244,37 @@ class MockLLMClient(LLMClient):
                     recovery_order = [m_txt.group(1), m_txt.group(2)]
 
         # 5. Role Bindings & Conflict Check
-        # Pattern: Funding account: <acc> is designated <role>
         role_spans: dict[str, str] = {}
         funding_map: dict[str, str] = {}
         conflict_detected = False
 
-        # Find all binding occurrences in chronological order
-        matches = list(re.finditer(r"Funding account:\s*(\w+)\s+is designated\s+(shipping|platform|discount)\.?", text, re.I))
-        for m in matches:
-            acc = m.group(1)
-            role = m.group(2).lower()
-            span_str = m.group(0)
-            is_amended_match = (m.start() >= (amendment_match.start() if amendment_match else len(text)))
+        # Support diverse role binding patterns
+        binding_patterns = [
+            re.compile(r"Funding account:\s*(\w+)\s+is designated\s+(shipping|platform|discount)\.?", re.I),
+            re.compile(r"Account\s+(\w+)\s+is assigned role\s+(shipping|platform|discount)\.?", re.I),
+            re.compile(r"Designated\s+(shipping|platform|discount)\s+account:\s*(\w+)\.?", re.I),
+            re.compile(r"Role assignment:\s*(\w+)\s+operates as\s+(shipping|platform|discount)\.?", re.I),
+            re.compile(r"Operational binding:\s*(\w+)\s+fulfills\s+(shipping|platform|discount)\.?", re.I),
+        ]
+
+        found_matches = []
+        for pat in binding_patterns:
+            for m in pat.finditer(text):
+                g1, g2 = m.group(1), m.group(2)
+                # If pattern was Designated <role> account: <acc>
+                if g1.lower() in ("shipping", "platform", "discount"):
+                    role = g1.lower()
+                    acc = g2
+                else:
+                    acc = g1
+                    role = g2.lower()
+                found_matches.append((m.start(), acc, role, m.group(0)))
+
+        # Sort matches by start position in text
+        found_matches.sort(key=lambda x: x[0])
+
+        for start_pos, acc, role, span_str in found_matches:
+            is_amended_match = (start_pos >= (amendment_match.start() if amendment_match else len(text)))
 
             if role in funding_map:
                 if funding_map[role] == acc:
@@ -247,6 +290,7 @@ class MockLLMClient(LLMClient):
             else:
                 funding_map[role] = acc
                 role_spans[role] = span_str
+
 
         if conflict_detected:
             return {

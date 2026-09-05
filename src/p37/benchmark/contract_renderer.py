@@ -41,15 +41,8 @@ COMMISSION_TREATMENT_NAMES = {
 
 
 def render_canonical(case: GroundTruthCase) -> str:
-    """Standard Tier-B canonical contract prose."""
-    rule_str = NONLINE_RULE_NAMES.get(
-        case.agreement.nonline_allocation_rule,
-        case.agreement.nonline_allocation_rule.replace("_", " "),
-    )
-    comm_str = COMMISSION_TREATMENT_NAMES.get(
-        case.agreement.commission_treatment,
-        "retained on refunds",
-    )
+    """Standard Tier-B canonical contract prose matching project._agreement_text."""
+    rule_str = case.agreement.nonline_allocation_rule.replace("_", " ")
     lines = [
         "Refund allocation agreement:",
         "Goods: refund bears with the fulfilling vendor.",
@@ -57,7 +50,6 @@ def render_canonical(case: GroundTruthCase) -> str:
         "Platform fee: refund bears with the platform.",
         "Discount adjustments: refund bears with the party that funded the discount.",
         f"Non-line refund rule: {rule_str}.",
-        f"Commission is {comm_str}.",
         "Recovery order: " + " then ".join(case.agreement.recovery_order) + ".",
     ]
     for role, account_id in sorted(case.funding_map.items()):
@@ -65,11 +57,17 @@ def render_canonical(case: GroundTruthCase) -> str:
     return "\n".join(lines)
 
 
+def _get_commission_treatment(case: GroundTruthCase) -> str:
+    if case.transfers:
+        return case.transfers[0].true_commission_treatment
+    return "retained"
+
+
 # ── Surface Form Templates Derived from tier_c_dataset.py ───────────────────
 
 def _render_synonym(case: GroundTruthCase, form_idx: int) -> str:
     rule = case.agreement.nonline_allocation_rule
-    comm = case.agreement.commission_treatment
+    comm = _get_commission_treatment(case)
     rec = case.agreement.recovery_order
     acc0 = rec[0] if len(rec) > 0 else "acc_0"
     acc1 = rec[1] if len(rec) > 1 else "acc_1"
@@ -189,7 +187,7 @@ def _render_synonym(case: GroundTruthCase, form_idx: int) -> str:
 
 def _render_passive(case: GroundTruthCase, form_idx: int) -> str:
     rule = case.agreement.nonline_allocation_rule
-    comm = case.agreement.commission_treatment
+    comm = _get_commission_treatment(case)
     rec = case.agreement.recovery_order
     acc0 = rec[0] if len(rec) > 0 else "acc_0"
     acc1 = rec[1] if len(rec) > 1 else "acc_1"
@@ -247,7 +245,7 @@ def _render_passive(case: GroundTruthCase, form_idx: int) -> str:
 
 def _render_negation(case: GroundTruthCase, form_idx: int) -> str:
     rule = case.agreement.nonline_allocation_rule
-    comm = case.agreement.commission_treatment
+    comm = _get_commission_treatment(case)
     rec = case.agreement.recovery_order
     acc0 = rec[0] if len(rec) > 0 else "acc_0"
     acc1 = rec[1] if len(rec) > 1 else "acc_1"
@@ -305,7 +303,7 @@ def _render_negation(case: GroundTruthCase, form_idx: int) -> str:
 
 def _render_multi_clause(case: GroundTruthCase, form_idx: int) -> str:
     rule_str = NONLINE_RULE_NAMES.get(case.agreement.nonline_allocation_rule, "proportional")
-    comm_str = COMMISSION_TREATMENT_NAMES.get(case.agreement.commission_treatment, "retained on refunds")
+    comm_str = COMMISSION_TREATMENT_NAMES.get(_get_commission_treatment(case), "retained on refunds")
     rec = case.agreement.recovery_order
     acc0 = rec[0] if len(rec) > 0 else "acc_0"
     acc1 = rec[1] if len(rec) > 1 else "acc_1"
@@ -375,7 +373,7 @@ def _render_multi_clause(case: GroundTruthCase, form_idx: int) -> str:
 
 def _render_amendment(case: GroundTruthCase, form_idx: int) -> str:
     rule_str = NONLINE_RULE_NAMES.get(case.agreement.nonline_allocation_rule, "proportional")
-    comm_str = COMMISSION_TREATMENT_NAMES.get(case.agreement.commission_treatment, "retained on refunds")
+    comm_str = COMMISSION_TREATMENT_NAMES.get(_get_commission_treatment(case), "retained on refunds")
     rec = case.agreement.recovery_order
     acc0 = rec[0] if len(rec) > 0 else "acc_0"
     acc1 = rec[1] if len(rec) > 1 else "acc_1"
