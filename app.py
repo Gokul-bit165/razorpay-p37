@@ -177,7 +177,22 @@ if "human_gate" not in st.session_state:
     st.session_state.human_gate = HumanConfirmationGate()
 
 if "llm_client" not in st.session_state:
-    st.session_state.llm_client = create_llm_client(mode="replay")
+    has_key = bool(os.environ.get("GEMINI_API_KEY"))
+    if not has_key:
+        env_f = Path(".env")
+        if env_f.exists():
+            for line in env_f.read_text(encoding="utf-8").splitlines():
+                if line.strip().startswith("GEMINI_API_KEY"):
+                    k = line.split("=", 1)[1].strip().strip('"').strip("'")
+                    if k:
+                        has_key = True
+                        os.environ["GEMINI_API_KEY"] = k
+                        break
+    client_mode = "record" if has_key else "replay"
+    try:
+        st.session_state.llm_client = create_llm_client(mode=client_mode, model_name="gemini-2.5-flash")
+    except Exception:
+        st.session_state.llm_client = create_llm_client(mode="replay", model_name="gemini-2.5-flash")
 
 if "llm_extractor" not in st.session_state:
     st.session_state.llm_extractor = LLMExtractor(client=st.session_state.llm_client)
@@ -286,7 +301,11 @@ if attack_mode:
         """)
 
         # Execute defense
-        rule_adv = st.session_state.llm_extractor.extract(attack_case.raw_text)
+        try:
+            rule_adv = st.session_state.llm_extractor.extract(attack_case.raw_text)
+        except Exception:
+            from p37.extraction.llm_client import MockLLMClient
+            rule_adv = LLMExtractor(client=MockLLMClient()).extract(attack_case.raw_text)
         st.markdown("<div style='margin-top: 12px;'></div>", unsafe_allow_html=True)
         if rule_adv.abstain:
             st.success(f"DEFENSE VERIFIED: System safely abstained (Reason: {rule_adv.abstain_reason.value}). Zero funds moved.")

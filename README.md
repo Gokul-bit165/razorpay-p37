@@ -37,7 +37,7 @@ python experiments/run_ladder.py --regime all --llm-mode replay
 ```bash
 python scripts/generate_manifest.py --verify
 ```
-*Committed Manifest SHA Binding:* `ffea70d98f7653a3da65b062f868028ad01e801b` (`ffea70d`)
+*Committed Manifest SHA Binding:* `4f1ea8c4ebd6cc7382f49231d8e92f8e5c921365` (`4f1ea8c`)
 
 ---
 
