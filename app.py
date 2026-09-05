@@ -19,6 +19,13 @@ from pathlib import Path
 
 import streamlit as st
 
+
+def render_html(markup: str) -> None:
+    """Render a raw HTML block, stripping per-line indentation so Streamlit's
+    markdown parser doesn't mistake indented HTML for a fenced code block."""
+    st.markdown("\n".join(line.strip() for line in markup.strip("\n").splitlines()), unsafe_allow_html=True)
+
+
 _ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(_ROOT / "src"))
 
@@ -55,113 +62,256 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# ── Styling: Dark Fintech Theme ───────────────────────────────────────────────
+# ── Styling: Modern Dark Glassmorphic Theme ───────────────────────────────────
 
 st.markdown("""
 <style>
+    :root {
+        --bg: #05070E;
+        --glass: rgba(255, 255, 255, 0.045);
+        --glass-hover: rgba(255, 255, 255, 0.075);
+        --glass-border: rgba(255, 255, 255, 0.09);
+        --accent-1: #3B82F6;
+        --accent-2: #8B5CF6;
+        --accent-3: #22D3EE;
+        --accent-gradient: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+        --success: #10B981;
+        --danger: #F43F5E;
+        --text: #F1F5F9;
+        --text-dim: #94A3B8;
+        --radius-lg: 20px;
+        --radius-md: 14px;
+        --radius-sm: 8px;
+    }
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(10px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    html, body, .stApp {
+        background-color: var(--bg) !important;
+    }
+
     .stApp {
-        background-color: #0A1128 !important;
-        color: #F8FAFC !important;
+        color: var(--text) !important;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background-image:
+            radial-gradient(circle at 12% 8%, rgba(59, 130, 246, 0.16), transparent 42%),
+            radial-gradient(circle at 88% 12%, rgba(139, 92, 246, 0.14), transparent 45%),
+            radial-gradient(circle at 50% 100%, rgba(34, 211, 238, 0.08), transparent 50%);
+        background-attachment: fixed;
     }
+
     h1, h2, h3, h4, h5, h6, p, label, .stMarkdown {
-        color: #F8FAFC !important;
+        color: var(--text) !important;
     }
+
+    section[data-testid="stSidebar"] {
+        background: rgba(6, 9, 20, 0.85) !important;
+        backdrop-filter: blur(18px);
+        border-right: 1px solid var(--glass-border);
+    }
+
+    /* ── Step navigation ─────────────────────────────────────────── */
     .step-nav-bar {
         display: flex;
         gap: 12px;
         margin-bottom: 24px;
-        background: #111E38;
-        padding: 8px;
-        border-radius: 12px;
-        border: 1px solid #1E2E4A;
+        background: var(--glass);
+        backdrop-filter: blur(20px);
+        padding: 10px;
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--glass-border);
     }
     .step-item {
         flex: 1;
         padding: 12px;
-        border-radius: 8px;
+        border-radius: var(--radius-md);
         text-align: center;
         font-size: 0.9rem;
         font-weight: 600;
-        color: #94A3B8;
+        color: var(--text-dim);
         background: transparent;
         border: 1px solid transparent;
         transition: all 0.2s;
     }
     .step-item.active {
-        background: #0D6EFD;
+        background: var(--accent-gradient);
         color: #FFFFFF;
-        box-shadow: 0 2px 8px rgba(13, 110, 253, 0.4);
+        box-shadow: 0 4px 20px rgba(59, 130, 246, 0.35);
     }
     .step-item.completed {
-        background: #162B4D;
-        color: #38BDF8;
-        border: 1px solid #1E3A8A;
+        background: rgba(56, 189, 248, 0.08);
+        color: var(--accent-3);
+        border: 1px solid rgba(56, 189, 248, 0.25);
     }
-    .rzp-card {
-        background: #111E38;
-        border: 1px solid #1E2E4A;
-        border-radius: 12px;
+
+    div[data-testid="stButton"] button {
+        border-radius: var(--radius-sm) !important;
+        border: 1px solid var(--glass-border) !important;
+        background: var(--glass) !important;
+        backdrop-filter: blur(12px);
+        color: var(--text) !important;
+        font-weight: 600 !important;
+        transition: all 0.18s ease !important;
+    }
+    div[data-testid="stButton"] button:hover {
+        background: var(--glass-hover) !important;
+        border-color: rgba(139, 92, 246, 0.4) !important;
+        transform: translateY(-1px);
+    }
+    div[data-testid="stButton"] button[kind="primary"] {
+        background: var(--accent-gradient) !important;
+        border: none !important;
+        box-shadow: 0 4px 18px rgba(59, 130, 246, 0.35) !important;
+    }
+    div[data-testid="stButton"] button[kind="primary"]:hover {
+        box-shadow: 0 6px 24px rgba(139, 92, 246, 0.45) !important;
+        transform: translateY(-1px);
+    }
+
+    /* ── Glass cards ──────────────────────────────────────────────── */
+    .glass-card {
+        background: var(--glass);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius-lg);
         padding: 24px;
         margin-bottom: 20px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+        animation: fadeInUp 0.35s ease-out;
     }
-    .rzp-card-danger {
-        background: rgba(220, 38, 38, 0.1);
-        border: 1px solid #DC2626;
-        border-radius: 12px;
+    .glass-card-danger {
+        background: rgba(244, 63, 94, 0.08);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(244, 63, 94, 0.35);
+        border-radius: var(--radius-lg);
         padding: 20px;
         margin-bottom: 20px;
+        box-shadow: 0 8px 28px rgba(244, 63, 94, 0.12);
+        animation: fadeInUp 0.35s ease-out;
     }
-    .rzp-card-success {
-        background: rgba(16, 185, 129, 0.1);
-        border: 1px solid #10B981;
-        border-radius: 12px;
+    .glass-card-success {
+        background: rgba(16, 185, 129, 0.08);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(16, 185, 129, 0.35);
+        border-radius: var(--radius-lg);
         padding: 20px;
         margin-bottom: 20px;
+        box-shadow: 0 8px 28px rgba(16, 185, 129, 0.12);
+        animation: fadeInUp 0.35s ease-out;
     }
-    .badge-red {
-        background: #EF4444;
-        color: white;
-        padding: 3px 8px;
-        border-radius: 4px;
-        font-size: 0.8rem;
+
+    /* ── Chips / badges ───────────────────────────────────────────── */
+    .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 12px;
+        border-radius: 999px;
+        font-size: 0.78rem;
         font-weight: 600;
+        letter-spacing: 0.2px;
+        border: 1px solid transparent;
     }
-    .badge-green {
-        background: #10B981;
-        color: white;
-        padding: 3px 8px;
-        border-radius: 4px;
-        font-size: 0.8rem;
-        font-weight: 600;
+    .badge-red, .chip-danger {
+        background: rgba(244, 63, 94, 0.14);
+        color: #FB7185;
+        border-color: rgba(244, 63, 94, 0.35);
     }
-    .badge-blue {
-        background: #0D6EFD;
-        color: white;
-        padding: 3px 8px;
-        border-radius: 4px;
-        font-size: 0.8rem;
-        font-weight: 600;
+    .badge-green, .chip-success {
+        background: rgba(16, 185, 129, 0.14);
+        color: #34D399;
+        border-color: rgba(16, 185, 129, 0.35);
     }
-    .highlight-span {
-        background: rgba(13, 110, 253, 0.35);
+    .badge-blue, .chip-accent {
+        background: rgba(59, 130, 246, 0.14);
         color: #60A5FA;
-        border-bottom: 2px solid #38BDF8;
-        padding: 2px 4px;
+        border-color: rgba(59, 130, 246, 0.35);
+    }
+
+    .highlight-span {
+        background: rgba(139, 92, 246, 0.22);
+        color: #C4B5FD;
+        border-bottom: 2px solid var(--accent-2);
+        padding: 2px 5px;
         border-radius: 4px;
         font-weight: 600;
     }
+
     .metric-value {
         font-size: 1.8rem;
         font-weight: 700;
-        color: #F8FAFC;
+        color: var(--text);
     }
     .metric-sub {
         font-size: 0.85rem;
-        color: #94A3B8;
+        color: var(--text-dim);
+    }
+    div[data-testid="stMetric"] {
+        background: var(--glass);
+        backdrop-filter: blur(16px);
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius-md);
+        padding: 14px 18px 10px 18px;
     }
     div[data-testid="stMetricValue"] {
-        color: #F8FAFC !important;
+        color: var(--text) !important;
+        background: var(--accent-gradient);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    div[data-testid="stMetricLabel"] {
+        color: var(--text-dim) !important;
+    }
+
+    /* ── Glass table ──────────────────────────────────────────────── */
+    .glass-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: var(--glass);
+        backdrop-filter: blur(18px);
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        border: 1px solid var(--glass-border);
+    }
+    .glass-table thead tr {
+        background: rgba(139, 92, 246, 0.10);
+        color: #C4B5FD;
+        text-align: left;
+    }
+    .glass-table th {
+        padding: 12px 16px;
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+    }
+    .glass-table td {
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--glass-border);
+    }
+    .glass-table tbody tr {
+        transition: background 0.15s ease;
+    }
+    .glass-table tbody tr:hover {
+        background: rgba(255, 255, 255, 0.03);
+    }
+    .glass-table tr.total-row {
+        background: rgba(59, 130, 246, 0.10);
+        font-weight: 700;
+    }
+
+    .stCodeBlock, div[data-testid="stCode"] {
+        border-radius: var(--radius-md) !important;
+        border: 1px solid var(--glass-border) !important;
+    }
+
+    hr {
+        border: 0;
+        border-top: 1px solid var(--glass-border);
     }
 </style>
 """, unsafe_allow_html=True)
@@ -229,19 +379,22 @@ ORDER_PRESET = {
 col_head, col_toggle = st.columns([3, 1])
 
 with col_head:
-    st.markdown("""
+    render_html("""
     <div style="padding: 4px 0 12px 0;">
-        <h2 style="margin: 0; font-size: 1.6rem; font-weight: 700; letter-spacing: -0.5px;">
-            Razorpay Route <span style="color: #0D6EFD;">P37</span> · Split Partial-Refund Clawback Engine
+        <h2 style="margin: 0; font-size: 1.8rem; font-weight: 800; letter-spacing: -0.5px;">
+            <span style="background: linear-gradient(135deg, #F8FAFC, #94A3B8); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Razorpay Route</span>
+            <span style="background: linear-gradient(135deg, #3B82F6, #8B5CF6); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;"> P37</span>
+            <span style="color: #94A3B8; font-weight: 500;"> · Split Partial-Refund Clawback Engine</span>
         </h2>
-        <div style="font-size: 0.85rem; color: #94A3B8; margin-top: 4px;">
+        <div style="font-size: 0.88rem; color: #94A3B8; margin-top: 6px;">
             Deterministic integer-paise allocation driven by verbatim-grounded contract clauses and human oversight
         </div>
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
 with col_toggle:
-    attack_mode = st.toggle("Attack Simulation Mode", value=False, help="Inject an adversarial prompt to test injection defense.")
+    st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
+    attack_mode = st.toggle("⚠️ Attack Simulation Mode", value=False, help="Inject an adversarial prompt to test injection defense.")
 
 # ── Interactive Step Navigation Bar ───────────────────────────────────────────
 
@@ -255,34 +408,36 @@ steps = [
 nav_cols = st.columns(4)
 for idx, (s_num, s_title, s_desc) in enumerate(steps):
     is_active = (st.session_state.current_step == s_num)
-    button_label = f"{s_title}\n{s_desc}"
+    is_done = (st.session_state.current_step > s_num)
+    prefix = "● " if is_active else ("✓ " if is_done else "○ ")
     if nav_cols[idx].button(
-        f"{'▶ ' if is_active else ''}{s_title}",
+        f"{prefix}{s_title}",
         key=f"nav_step_{s_num}",
         use_container_width=True,
         type="primary" if is_active else "secondary",
+        help=s_desc,
     ):
         st.session_state.current_step = s_num
         st.rerun()
 
-st.markdown("<hr style='border: 0; border-top: 1px solid #1E2E4A; margin: 12px 0 24px 0;'>", unsafe_allow_html=True)
+st.markdown("<hr style='margin: 12px 0 24px 0;'>", unsafe_allow_html=True)
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # PERSISTENT ATTACK MODE VIEW
 # ═══════════════════════════════════════════════════════════════════════════════
 
 if attack_mode:
-    st.markdown("""
-    <div class="rzp-card-danger">
+    render_html("""
+    <div class="glass-card-danger">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h3 style="margin: 0; color: #EF4444; font-size: 1.2rem;">Adversarial Prompt Injection Attack Active</h3>
-            <span class="badge-red">Security Defense Evaluation</span>
+            <h3 style="margin: 0; color: #FB7185; font-size: 1.2rem;">Adversarial Prompt Injection Attack Active</h3>
+            <span class="chip chip-danger">Security Defense Evaluation</span>
         </div>
         <div style="font-size: 0.9rem; color: #FCA5A5; margin-top: 6px;">
             A malicious merchant injects unauthorized instructions and fixed monetary debit commands inside contract prose.
         </div>
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
     attack_case = HEADLINE_ADVERSARIAL_CASES[0]  # adv_01_instruction_override
 
@@ -313,7 +468,7 @@ if attack_mode:
         else:
             st.info(f"DEFENSE VERIFIED: Extractor ignored injection payload. Extracted: nonline={rule_adv.nonline_allocation.value}")
 
-    st.markdown("<hr style='border: 0; border-top: 1px solid #1E2E4A; margin: 24px 0;'>", unsafe_allow_html=True)
+    st.markdown("<hr style='margin: 24px 0;'>", unsafe_allow_html=True)
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # STEP 1 — THE PROBLEM (Naive Proportional Clawback Breakdown)
@@ -338,48 +493,48 @@ if st.session_state.current_step == 1:
     st.markdown("#### Transaction Split vs. Naive Proportional Recovery")
 
     naive_rows = [
-        {"Account": "Vendor A (Fulfilled Item A)", "Original Share": "₹500.00 (50%)", "Returned Item": "Yes (₹500.00)", "Naive Debit": "₹250.00", "Verdict": "Under-debited by ₹250.00", "Class": "badge-blue"},
-        {"Account": "Vendor B (Fulfilled Item B)", "Original Share": "₹300.00 (30%)", "Returned Item": "No (₹0.00)", "Naive Debit": "₹150.00", "Verdict": "WRONGLY DEBITED ₹150.00", "Class": "badge-red"},
-        {"Account": "Courier (Delivery Fleet)", "Original Share": "₹100.00 (10%)", "Returned Item": "No (₹0.00)", "Naive Debit": "₹50.00", "Verdict": "WRONGLY DEBITED ₹50.00", "Class": "badge-red"},
-        {"Account": "Platform Fee Account", "Original Share": "₹100.00 (10%)", "Returned Item": "No (₹0.00)", "Naive Debit": "₹50.00", "Verdict": "WRONGLY DEBITED ₹50.00", "Class": "badge-red"},
+        {"Account": "Vendor A (Fulfilled Item A)", "Original Share": "₹500.00 (50%)", "Returned Item": "Yes (₹500.00)", "Naive Debit": "₹250.00", "Verdict": "Under-debited by ₹250.00", "Class": "chip-accent"},
+        {"Account": "Vendor B (Fulfilled Item B)", "Original Share": "₹300.00 (30%)", "Returned Item": "No (₹0.00)", "Naive Debit": "₹150.00", "Verdict": "WRONGLY DEBITED ₹150.00", "Class": "chip-danger"},
+        {"Account": "Courier (Delivery Fleet)", "Original Share": "₹100.00 (10%)", "Returned Item": "No (₹0.00)", "Naive Debit": "₹50.00", "Verdict": "WRONGLY DEBITED ₹50.00", "Class": "chip-danger"},
+        {"Account": "Platform Fee Account", "Original Share": "₹100.00 (10%)", "Returned Item": "No (₹0.00)", "Naive Debit": "₹50.00", "Verdict": "WRONGLY DEBITED ₹50.00", "Class": "chip-danger"},
     ]
 
     html_table = """
-    <table style="width: 100%; border-collapse: collapse; background: #111E38; border-radius: 8px; overflow: hidden; border: 1px solid #1E2E4A;">
+    <table class="glass-table">
         <thead>
-            <tr style="background: #172A4D; color: #93C5FD; text-align: left;">
-                <th style="padding: 12px 16px;">Account / Party</th>
-                <th style="padding: 12px 16px;">Original Split</th>
-                <th style="padding: 12px 16px;">Item Return</th>
-                <th style="padding: 12px 16px;">Naive Clawback</th>
-                <th style="padding: 12px 16px;">Financial Impact</th>
+            <tr>
+                <th>Account / Party</th>
+                <th>Original Split</th>
+                <th>Item Return</th>
+                <th>Naive Clawback</th>
+                <th>Financial Impact</th>
             </tr>
         </thead>
         <tbody>
     """
     for r in naive_rows:
         html_table += f"""
-            <tr style="border-bottom: 1px solid #1E2E4A;">
-                <td style="padding: 12px 16px; font-weight: 500;">{r['Account']}</td>
-                <td style="padding: 12px 16px;">{r['Original Share']}</td>
-                <td style="padding: 12px 16px;">{r['Returned Item']}</td>
-                <td style="padding: 12px 16px; font-weight: 600;">{r['Naive Debit']}</td>
-                <td style="padding: 12px 16px;"><span class="{r['Class']}">{r['Verdict']}</span></td>
+            <tr>
+                <td style="font-weight: 500;">{r['Account']}</td>
+                <td>{r['Original Share']}</td>
+                <td>{r['Returned Item']}</td>
+                <td style="font-weight: 600;">{r['Naive Debit']}</td>
+                <td><span class="chip {r['Class']}">{r['Verdict']}</span></td>
             </tr>
         """
     html_table += "</tbody></table>"
-    st.markdown(html_table, unsafe_allow_html=True)
+    render_html(html_table)
 
-    st.markdown("""
-    <div class="rzp-card" style="margin-top: 24px;">
-        <h4 style="margin: 0 0 8px 0; color: #38BDF8;">Real-World Business Consequence</h4>
+    render_html("""
+    <div class="glass-card" style="margin-top: 24px;">
+        <h4 style="margin: 0 0 8px 0; color: #22D3EE;">Real-World Business Consequence</h4>
         <div style="font-size: 0.95rem; color: #CBD5E1; line-height: 1.5;">
-            Vendor B did nothing wrong, yet their account balance is docked ₹150.00. This triggers merchant disputes, 
-            support tickets, vendor churn, and expensive manual settlement reconciliation for Razorpay operations. 
+            Vendor B did nothing wrong, yet their account balance is docked ₹150.00. This triggers merchant disputes,
+            support tickets, vendor churn, and expensive manual settlement reconciliation for Razorpay operations.
             The governing truth lives in merchant contract clauses, not in raw payment records.
         </div>
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
     c_btn1, c_btn2 = st.columns([4, 1])
     if c_btn2.button("Proceed to Step 2: The Clause →", type="primary", use_container_width=True):
@@ -412,9 +567,7 @@ elif st.session_state.current_step == 2:
     with col_clause_l:
         st.markdown("#### Governing Contract Text")
         st.markdown(
-            f"""
-            <div style="background: #0F172A; border: 1px solid #334155; border-radius: 8px; padding: 16px; font-family: monospace; font-size: 0.9rem; line-height: 1.6; white-space: pre-wrap;">{highlighted_text}</div>
-            """,
+            f'<div style="background: rgba(255,255,255,0.04); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.09); border-radius: 14px; padding: 16px; font-family: \'SFMono-Regular\', Consolas, monospace; font-size: 0.9rem; line-height: 1.7; white-space: pre-wrap;">{highlighted_text}</div>',
             unsafe_allow_html=True,
         )
         st.markdown("<div style='font-size: 0.8rem; color: #94A3B8; margin-top: 8px;'>Highlighted spans represent verbatim quotes validated against the original string.</div>", unsafe_allow_html=True)
@@ -434,12 +587,12 @@ elif st.session_state.current_step == 2:
         st.markdown("#### Grounding Verification")
         all_valid = all(s.validate(raw_text) for s in rule.spans.values())
         if all_valid:
-            st.markdown("""
-            <div class="rzp-card-success" style="padding: 12px 16px;">
-                <div style="font-weight: 600; color: #10B981;">Span Validation: 100% PASS</div>
+            render_html("""
+            <div class="glass-card-success" style="padding: 12px 16px;">
+                <div style="font-weight: 600; color: #34D399;">Span Validation: 100% PASS</div>
                 <div style="font-size: 0.85rem; color: #A7F3D0;">All quotes match exact character offsets in contract text. Hallucination rate: 0.0%.</div>
             </div>
-            """, unsafe_allow_html=True)
+            """)
 
     c_b2_back, c_b2_sp, c_b2_next = st.columns([1, 2, 1])
     if c_b2_back.button("← Back to Step 1", use_container_width=True):
@@ -465,31 +618,31 @@ elif st.session_state.current_step == 3:
     gate = st.session_state.human_gate
     req = gate.prepare_request(raw_text, rule)
 
-    st.markdown("""
-    <div class="rzp-card">
+    render_html("""
+    <div class="glass-card">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-            <h4 style="margin: 0; color: #38BDF8;">Pending Settlement Review Request</h4>
-            <span class="badge-blue">Request ID: req_demo_001</span>
+            <h4 style="margin: 0; color: #22D3EE;">Pending Settlement Review Request</h4>
+            <span class="chip chip-accent">Request ID: req_demo_001</span>
         </div>
         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px;">
-            <div>
+            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 12px 14px;">
                 <div style="font-size: 0.8rem; color: #94A3B8;">Extracted Nonline Rule</div>
                 <div style="font-weight: 600; font-size: 1.1rem; color: #F8FAFC;">shipping_funder</div>
             </div>
-            <div>
+            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 12px 14px;">
                 <div style="font-size: 0.8rem; color: #94A3B8;">Commission Policy</div>
                 <div style="font-weight: 600; font-size: 1.1rem; color: #F8FAFC;">retained</div>
             </div>
-            <div>
+            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 12px 14px;">
                 <div style="font-size: 0.8rem; color: #94A3B8;">Recovery Account</div>
                 <div style="font-weight: 600; font-size: 1.1rem; color: #F8FAFC;">acc_vendor_a</div>
             </div>
         </div>
-        <div style="font-size: 0.85rem; color: #CBD5E1; border-top: 1px solid #1E2E4A; padding-top: 12px;">
+        <div style="font-size: 0.85rem; color: #CBD5E1; border-top: 1px solid rgba(255,255,255,0.09); padding-top: 12px;">
             <strong>Verified Source Span:</strong> <span class="highlight-span">"Non-line refund rule: shipping funder."</span>
         </div>
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
     col_btn_app, col_btn_edit, col_btn_rej = st.columns(3)
 
@@ -505,23 +658,23 @@ elif st.session_state.current_step == 3:
     st.markdown("<div style='margin-top: 16px;'></div>", unsafe_allow_html=True)
 
     if st.session_state.gate_decision == "APPROVED":
-        st.markdown("""
-        <div class="rzp-card-success">
-            <h4 style="margin: 0 0 6px 0; color: #10B981;">Decision: Approved by Operator (reviewer_ops_01)</h4>
+        render_html("""
+        <div class="glass-card-success">
+            <h4 style="margin: 0 0 6px 0; color: #34D399;">Decision: Approved by Operator (reviewer_ops_01)</h4>
             <div style="font-size: 0.9rem; color: #A7F3D0;">
                 Cryptographic audit trail entry logged. Rule confirmed for execution. Ready for allocator dispatch.
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
     elif st.session_state.gate_decision == "REJECTED":
-        st.markdown("""
-        <div class="rzp-card-danger">
-            <h4 style="margin: 0 0 6px 0; color: #EF4444;">Decision: Rejected by Operator</h4>
+        render_html("""
+        <div class="glass-card-danger">
+            <h4 style="margin: 0 0 6px 0; color: #FB7185;">Decision: Rejected by Operator</h4>
             <div style="font-size: 0.9rem; color: #FCA5A5;">
                 Engine safely abstains (AbstainReason: human_operator_rejected). <strong>ZERO funds moved.</strong> No merchant balance altered.
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
     elif st.session_state.gate_decision == "EDITED":
         st.info("Edit mode: Operator manually adjusted nonline rule to 'proportional'. Audit log records manual override.")
 
@@ -548,50 +701,50 @@ elif st.session_state.current_step == 4:
     st.markdown("#### Comparison: Naive Proportional vs P37 Contract-Aware Execution")
 
     comp_table = """
-    <table style="width: 100%; border-collapse: collapse; background: #111E38; border-radius: 8px; overflow: hidden; border: 1px solid #1E2E4A;">
+    <table class="glass-table">
         <thead>
-            <tr style="background: #172A4D; color: #93C5FD; text-align: left;">
-                <th style="padding: 12px 16px;">Account / Party</th>
-                <th style="padding: 12px 16px;">Naive Route Clawback</th>
-                <th style="padding: 12px 16px;">P37 Contract-Aware Clawback</th>
-                <th style="padding: 12px 16px;">Financial Delta</th>
+            <tr>
+                <th>Account / Party</th>
+                <th>Naive Route Clawback</th>
+                <th>P37 Contract-Aware Clawback</th>
+                <th>Financial Delta</th>
             </tr>
         </thead>
         <tbody>
-            <tr style="border-bottom: 1px solid #1E2E4A;">
-                <td style="padding: 12px 16px; font-weight: 500;">Vendor A (Fulfilled Item A)</td>
-                <td style="padding: 12px 16px; color: #EF4444; font-weight: 600;">₹250.00</td>
-                <td style="padding: 12px 16px; color: #10B981; font-weight: 600;">₹500.00</td>
-                <td style="padding: 12px 16px;"><span class="badge-blue">Correct: 100% item cost recovered</span></td>
+            <tr>
+                <td style="font-weight: 500;">Vendor A (Fulfilled Item A)</td>
+                <td style="color: #FB7185; font-weight: 600;">₹250.00</td>
+                <td style="color: #34D399; font-weight: 600;">₹500.00</td>
+                <td><span class="chip chip-accent">Correct: 100% item cost recovered</span></td>
             </tr>
-            <tr style="border-bottom: 1px solid #1E2E4A;">
-                <td style="padding: 12px 16px; font-weight: 500;">Vendor B (Item B Unreturned)</td>
-                <td style="padding: 12px 16px; color: #EF4444; font-weight: 600;">₹150.00 (Wrongful)</td>
-                <td style="padding: 12px 16px; color: #10B981; font-weight: 600;">₹0.00</td>
-                <td style="padding: 12px 16px;"><span class="badge-green">₹150.00 saved (Zero unfair debit)</span></td>
+            <tr>
+                <td style="font-weight: 500;">Vendor B (Item B Unreturned)</td>
+                <td style="color: #FB7185; font-weight: 600;">₹150.00 (Wrongful)</td>
+                <td style="color: #34D399; font-weight: 600;">₹0.00</td>
+                <td><span class="chip chip-success">₹150.00 saved (Zero unfair debit)</span></td>
             </tr>
-            <tr style="border-bottom: 1px solid #1E2E4A;">
-                <td style="padding: 12px 16px; font-weight: 500;">Logistics Partner (Courier)</td>
-                <td style="padding: 12px 16px; color: #EF4444; font-weight: 600;">₹50.00 (Wrongful)</td>
-                <td style="padding: 12px 16px; color: #10B981; font-weight: 600;">₹0.00</td>
-                <td style="padding: 12px 16px;"><span class="badge-green">₹50.00 saved (Shipping unaffected)</span></td>
+            <tr>
+                <td style="font-weight: 500;">Logistics Partner (Courier)</td>
+                <td style="color: #FB7185; font-weight: 600;">₹50.00 (Wrongful)</td>
+                <td style="color: #34D399; font-weight: 600;">₹0.00</td>
+                <td><span class="chip chip-success">₹50.00 saved (Shipping unaffected)</span></td>
             </tr>
-            <tr style="border-bottom: 1px solid #1E2E4A;">
-                <td style="padding: 12px 16px; font-weight: 500;">Platform Fee Account</td>
-                <td style="padding: 12px 16px; color: #EF4444; font-weight: 600;">₹50.00 (Wrongful)</td>
-                <td style="padding: 12px 16px; color: #10B981; font-weight: 600;">₹0.00</td>
-                <td style="padding: 12px 16px;"><span class="badge-green">₹50.00 fee retained per contract</span></td>
+            <tr>
+                <td style="font-weight: 500;">Platform Fee Account</td>
+                <td style="color: #FB7185; font-weight: 600;">₹50.00 (Wrongful)</td>
+                <td style="color: #34D399; font-weight: 600;">₹0.00</td>
+                <td><span class="chip chip-success">₹50.00 fee retained per contract</span></td>
             </tr>
-            <tr style="background: #172A4D; font-weight: 700;">
-                <td style="padding: 12px 16px;">Total Amount Recovered</td>
-                <td style="padding: 12px 16px;">₹500.00 (50,000 paise)</td>
-                <td style="padding: 12px 16px; color: #38BDF8;">₹500.00 (50,000 paise)</td>
-                <td style="padding: 12px 16px;"><span class="badge-green">Exact Paise Conservation: PASS</span></td>
+            <tr class="total-row">
+                <td>Total Amount Recovered</td>
+                <td>₹500.00 (50,000 paise)</td>
+                <td style="color: #22D3EE;">₹500.00 (50,000 paise)</td>
+                <td><span class="chip chip-success">Exact Paise Conservation: PASS</span></td>
             </tr>
         </tbody>
     </table>
     """
-    st.markdown(comp_table, unsafe_allow_html=True)
+    render_html(comp_table)
 
     st.markdown("<div style='margin-top: 24px;'></div>", unsafe_allow_html=True)
 
@@ -601,16 +754,16 @@ elif st.session_state.current_step == 4:
     col_c2.metric("Floating-Point Drift", "₹0.00", "Integer math throughout")
     col_c3.metric("Disputes Eliminated", "3 accounts protected", "Vendor B, Courier, Platform")
 
-    st.markdown("""
-    <div class="rzp-card-success" style="margin-top: 20px;">
-        <h4 style="margin: 0 0 6px 0; color: #10B981;">Financial Safety Proof</h4>
+    render_html("""
+    <div class="glass-card-success" style="margin-top: 20px;">
+        <h4 style="margin: 0 0 6px 0; color: #34D399;">Financial Safety Proof</h4>
         <div style="font-size: 0.95rem; color: #CBD5E1; line-height: 1.5;">
-            The sum of parts (₹500.00) equals the refund amount (₹500.00) with <strong>zero residual paise</strong>. 
-            Vendor B's balance remains untouched. Razorpay retains earned commission per agreement terms. 
+            The sum of parts (₹500.00) equals the refund amount (₹500.00) with <strong>zero residual paise</strong>.
+            Vendor B's balance remains untouched. Razorpay retains earned commission per agreement terms.
             All financial operations executed deterministically.
         </div>
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
     c_b4_back, c_b4_sp, c_b4_rst = st.columns([1, 2, 1])
     if c_b4_back.button("← Back to Step 3", use_container_width=True):
