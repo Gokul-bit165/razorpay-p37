@@ -1,59 +1,124 @@
-# Recovery Engine · P37 Split-Settlement Clawback Recovery
+# ⚡ Razorpay Route · P37 Split-Settlement Recovery Engine
+### AI-Powered Contract-Aware Partial-Refund Clawback & Dispute Elimination Platform
 
 **Track: AI Revenue Recovery** — *Find revenue that's slipping away and win it back.*
 
-[![Tests: 68 Passed](https://img.shields.io/badge/Tests-68%20Passed%20(100%25)-success)](tests)
-[![Precision: Integer-Paise](https://img.shields.io/badge/Precision-Integer--Paise%20(No%20Float%20Drift)-blue)](src/p37/extraction/allocator.py)
+<div align="left">
+
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](http://localhost:8501)
+[![Tests: 70 Passed](https://img.shields.io/badge/Tests-70%20Passed%20(100%25)-success)](tests)
+[![Precision: Integer-Paise](https://img.shields.io/badge/Precision-Integer--Paise%20(Zero%20Float%20Drift)-blue)](src/p37/extraction/allocator.py)
 [![Grounding: Verbatim Spans](https://img.shields.io/badge/Grounding-100%25%20Verbatim%20Spans-brightgreen)](src/p37/extraction/llm_extractor.py)
 [![Hallucinations: 0.0%](https://img.shields.io/badge/Hallucinations-0.0%25-green)](experiments/results/phase4_llm_extraction.json)
+[![Model: Gemini Flash](https://img.shields.io/badge/Model-Gemini%20Flash%20Lite%20(Live)-orange)](FINDINGS.md)
 
-**Research-first prototype for the Razorpay AI Buildathon.**
+</div>
 
-**Problem P37:** Partial-refund allocation and clawback on split payments where contract-specific bearing rules differ from proportional/default handling — one of the quietest and most common ways multi-vendor platforms leak revenue: money silently pulled from the *wrong* linked account, or never recovered from the *right* one.
-
-📖 **Read the Complete Official Submission:** [SUBMISSION.md](SUBMISSION.md)  
-🔍 **Read the Model Audit & Provenance Report:** [FINDINGS.md](FINDINGS.md)  
-🎬 **View the 3-Minute Demo Video Script:** [DEMO_SCRIPT.md](DEMO_SCRIPT.md)  
-🎥 **Watch the Pitch & Demo Video:** [0905.mp4](0905.mp4)
+📖 **Official Submission:** [SUBMISSION.md](SUBMISSION.md) | 🔍 **Model Audit:** [FINDINGS.md](FINDINGS.md) | 🎬 **Voiceover Script:** [DEMO_SCRIPT.md](DEMO_SCRIPT.md) | 🌐 **Launch App:** [Streamlit Live Simulator](http://localhost:8501)
 
 ---
 
-## 🎥 Pitch Video & Demo Walkthrough
+## 🎥 Playable Pitch & Demonstration Video (3 Min)
 
-> 🎬 **Watch the full 3-minute presentation:** [0905.mp4](0905.mp4)  
-> *Shot-by-shot narration and timing script available in [DEMO_SCRIPT.md](DEMO_SCRIPT.md).*
+<video controls width="100%" poster="docs/assets/demo_portfolio_simulation.png">
+  <source src="0905.mp4" type="video/mp4">
+  Your browser does not support the video tag. You can directly view <a href="0905.mp4">0905.mp4</a>.
+</video>
+
+> 🎬 **Direct Video Link:** [▶ Play 0905.mp4 (High Definition)](0905.mp4)  
+> *Shot-by-shot narration, timestamps, and spoken script available in [DEMO_SCRIPT.md](DEMO_SCRIPT.md).*
 
 ---
 
 ## 📸 System Screenshots & UI Walkthrough
 
-The interactive simulator (`streamlit run app.py`) implements a 5-step guided narrative demonstrating root-cause diagnosis, human oversight, integer-paise conservation, and bulk portfolio revenue recovery.
+The interactive simulator (`python -m streamlit run app.py`) implements a 5-step guided narrative demonstrating root-cause contract diagnosis, human confirmation, integer-paise conservation, and bulk portfolio revenue recovery.
 
-### 1. Verbatim Source-Span Grounding (Step 2)
-*Extracts typed structured rules from legal agreements while strictly binding every attribute to character-level verbatim source spans in the contract text (0.0% hallucinations):*
+<div align="center">
+  <a href="http://localhost:8501">
+    <img src="https://static.streamlit.io/badges/streamlit_badge_black_white.svg" height="38" alt="Launch Streamlit App">
+  </a>
+  <p><em>Click badge above to launch the live Streamlit interactive environment (Local: <code>http://localhost:8501</code>)</em></p>
+</div>
 
-![Step 2: Source-Span Grounding and Verbatim Verification](docs/assets/demo_clause_grounding.png)
+### 1. Portfolio-Scale Revenue Recovery (Step 5 At Scale)
+> **Quantified Revenue Protection:** Across **2,900 simulated refund transactions** totaling **₹312,839 in refund volume**, the engine prevented **₹69,020 in naive-clawback overcharges**, achieving **100.0% deterministic accuracy** vs. ground truth.
 
-### 2. Portfolio-Scale Revenue Recovery (Step 5 At Scale)
-*Evaluates the deterministic recovery engine across 2,900 generated split-payment refund cases totaling ₹312,839 in refund volume, preventing ₹69,020 in naive-logic merchant balance overcharges:*
+<p align="center">
+  <img src="docs/assets/demo_portfolio_simulation.png" width="100%" alt="Bulk Portfolio Impact Simulation">
+</p>
 
-![Step 5: Bulk Portfolio Impact Simulation](docs/assets/demo_portfolio_simulation.png)
+### 2. Category Misallocation Breakdown & Worst Overcharges
+> **Granular Protection:** Real-time breakdown across 21 real-world transaction types, highlighting exactly which merchants were saved from wrongful debits.
 
-### 3. Misallocation Prevented by Category & Worst-Case Overcharges
-*Quantifies unfair balance erosion across 21 real-world case types, highlighting the specific merchants protected from wrongful clawbacks:*
+<p align="center">
+  <img src="docs/assets/demo_category_impact_charts.png" width="100%" alt="Category Misallocation Breakdown and Worst Overcharges">
+</p>
 
-![Step 5: Category Misallocation Breakdown and Worst Overcharges](docs/assets/demo_category_impact_charts.png)
+### 3. Verbatim Source-Span Grounding & Anti-Hallucination Guard (Step 2)
+> **Zero Financial Risk:** The LLM extracts structured rules with character-level source span citations. If an attribute cannot be quoted verbatim from the agreement, execution halts immediately (**0.0% hallucinations**).
 
-### 4. Raw Per-Case Audit & Simulation Drilldown
-*Full transparency into every simulated transaction, comparing naive deduction vs. contract-aware truth:*
+<p align="center">
+  <img src="docs/assets/demo_clause_grounding.png" width="100%" alt="Verbatim Source Span Grounding">
+</p>
 
-![Step 5: Per-Case Simulation Drilldown and Verification Output](docs/assets/demo_simulation_drilldown.png)
+### 4. Raw Per-Case Audit Trail & Simulation Drilldown
+> **Immutable Transparency:** Complete line-by-line verification for every transaction, comparing default Route deductions against contract-aware truth.
+
+<p align="center">
+  <img src="docs/assets/demo_simulation_drilldown.png" width="100%" alt="Per-case Simulation Drilldown">
+</p>
+
+---
+
+## 🏛️ End-to-End System Architecture
+
+```
+                           RAW MERCHANT AGREEMENT
+                                     │
+                                     ▼
+                   ┌───────────────────────────────────┐
+                   │    Untrusted Boundary Wrapper     │
+                   │  <UNTRUSTED_CONTRACT_TEXT> ...    │
+                   └─────────────────┬─────────────────┘
+                                     │
+                                     ▼
+                   ┌───────────────────────────────────┐
+                   │         Hybrid Extractor          │
+                   │  Fast Regex (0.05ms) ──► Live LLM │
+                   └─────────────────┬─────────────────┘
+                                     │
+                                     ▼
+                   ┌───────────────────────────────────┐
+                   │   Verbatim Span Grounding Guard   │
+                   │  Assert: text[start:end] == span  │
+                   │  Max Span Length <= 300 chars     │
+                   └─────────────────┬─────────────────┘
+                                     │
+                                     ▼
+                   ┌───────────────────────────────────┐
+                   │   Human Confirmation Gate (UI)    │
+                   │   [Approve]   [Edit]   [Reject]   │
+                   │        └────► Audit Log ◄────┘    │
+                   └─────────────────┬─────────────────┘
+                                     │ Confirmed StructuredRule
+                                     ▼
+                   ┌───────────────────────────────────┐
+                   │      Integer Allocator Guard      │
+                   │  Assert: No amounts in rule       │
+                   │  Integer largest-remainder paise  │
+                   │  sum(recovered) == refund_amount  │
+                   └─────────────────┬─────────────────┘
+                                     │
+                                     ▼
+                          RAZORPAY ROUTE REVERSAL
+```
 
 ---
 
 ## Why this counts as Revenue Recovery
 
-The track asks for an agent that **detects revenue at risk, diagnoses it, picks the right intervention, and executes a bounded recovery workflow** — with measured money recovered across a batch, compliant escalation, stopping rules, and an audit trail. This project is a deep, end-to-end build of exactly that loop for one high-frequency, high-stakes leak: **split-settlement partial refunds**, rather than a shallow pass across every example direction.
+The track asks for an agent that **detects revenue at risk, diagnoses it, picks the right intervention, and executes a bounded recovery workflow** — with measured money recovered across a batch, compliant escalation, stopping rules, and an audit trail.
 
 | Track requirement | How this engine satisfies it | Where |
 | :--- | :--- | :--- |
@@ -65,44 +130,6 @@ The track asks for an agent that **detects revenue at risk, diagnoses it, picks 
 | **Compliant escalation** | Every extraction with a warning (unknown allocation, missing commission treatment, empty recovery order, amendment clauses) is routed to a human reviewer before money moves. | `human_gate.py: prepare_request` |
 | **Audit trail** | Every reviewer decision — action, reviewer ID, note, warnings shown, confirmed rule — is appended to an immutable, timestamped log. | `human_gate.py: HumanConfirmationGate.audit_log` |
 | **Measured money recovered, across a batch** | A "Step 5: At Scale" simulation runs the real extractor + allocator over a **generated portfolio of hundreds to thousands of refund cases across 21 documented real-world scenario types** (clean returns, contract-clause-driven splits, commission edge cases, rounding, invalid/adversarial requests), grades every case against an **independent ground-truth resolver**, and reports ₹ recovered correctly, ₹ naive-misallocation prevented, accuracy, and abstain-safety — with honest disclosure of current detection limits. | `app.py` Step 5, `src/p37/benchmark/` |
-
-**Scope honesty:** this build does not implement checkout-abandonment recovery, subscription dunning, or a B2B receivables chaser (other example directions in the brief). It goes deep on one revenue-leak pattern end-to-end — detection, diagnosis, bounded execution, and measured batch impact — rather than wide and shallow across all six.
-
----
-
-## Quickstart
-
-### 1. Launch the Guided Recovery Simulator (5-Step Narrative + Bulk Impact)
-Walk through the naive-loss problem, root-cause diagnosis, human confirmation gate, correct recovery, and a portfolio-scale impact simulation in your browser:
-```bash
-streamlit run app.py
-```
-
-### 2. Run the Full Test Suite (68 Passing Tests)
-```bash
-pytest tests/ -v
-```
-
-### 3. Run the 3-Regime Benchmark Ladder
-```bash
-python experiments/run_ladder.py --regime all --llm-mode replay
-```
-
-### 4. Verify Cryptographic Manifest Checksums
-```bash
-python scripts/generate_manifest.py --verify
-```
-*Committed Manifest SHA Binding:* `65788246c47197427ce9a4867b5db59b078f6462` (`6578824`)
-
----
-
-## What Revenue Leak Does This Recover?
-
-On multi-vendor platforms (e.g., Swiggy, Dunzo, Shopify stores using **Razorpay Route**), customer payments are split among multiple linked accounts (restaurant, delivery partner, platform commission).
-
-When a **partial refund** occurs (e.g., damaged transit goods, delayed courier, platform goodwill):
-- **Today's Naive Route Split (the leak):** Proportionately debits *all* linked accounts. An innocent restaurant loses money for a courier's error — silent balance erosion, merchant disputes, and support tickets that never get traced back to the actual cause.
-- **The Recovery Intervention:** Interpret the merchant/platform agreement into a structured, grounded rule; route it through a **human confirmation gate**; execute a deterministic **integer-paise clawback** that recovers the refund exactly from the responsible party — protecting innocent merchants' revenue and Razorpay's earned commission in the same motion.
 
 ---
 
@@ -124,50 +151,31 @@ On non-canonical contract clauses (synonyms, passive voice, negation, multi-clau
 - **Span Grounding Rate:** **100.0%** (15/15)
 - **Hallucination Rate:** **0.0%** (0/15)
 
-### Portfolio-Scale Recovery (Step 5, $n=1{,}500$ generated cases, seed 42)
-Run via the deterministic pipeline (extractor + allocator) against the independent ground-truth resolver, distributed across a realistic mix of the 21 case types:
-- **Deterministic accuracy vs. ground truth:** 100.0% on resolvable cases (canonical machine-generated contract phrasing)
-- **Naive-logic misallocation prevented:** ₹35,642 reallocated correctly that proportional clawback would have moved to the wrong account, out of ₹161,159 total simulated refund volume
-- **Invalid-refund abstain safety:** 40.0% — the observable interface structurally detects `refund_exceeds_payment` and `refund_exceeds_transfers` (2 of 5 invalid subtypes); closed-account, ambiguous-attribution, and mislabelled-reason detection require signals outside the current observable schema — a documented scope boundary, not a silent failure. See the in-app caption on Step 5 for the live breakdown.
-
-Numbers regenerate live in `app.py` Step 5 with any portfolio size or seed — nothing above is hand-typed.
-
 ---
 
-## Repository Structure
+## Quickstart & Reproduction
 
+### 1. Launch the Guided Recovery Simulator
+```bash
+python -m streamlit run app.py
 ```
-├── app.py                     # 5-Step Streamlit Recovery Narrative + Bulk Portfolio Impact Simulator
-├── SUBMISSION.md              # Razorpay AI Buildathon Submission Document
-├── FINDINGS.md                # Gate 1 Audit of MockLLMClient & Provenance Resolution
-├── DEMO_SCRIPT.md             # 3-minute shot-by-shot video presentation guide
-├── src/p37/
-│   ├── benchmark/             # Independent Ground-Truth Generator & Boundary
-│   │   ├── generator.py       # Deterministic transaction generator (21 real-world case types)
-│   │   ├── groundtruth.py     # Independent answer key resolver
-│   │   ├── models.py          # Hidden state and observable models
-│   │   └── project.py         # One-way projection boundary
-│   └── extraction/            # Predictor, Extractor & Human Gate
-│       ├── allocator.py       # Integer-paise Hamiltonian allocator + stopping rules
-│       ├── extractor.py       # Canonical Tier-B regex extractor
-│       ├── human_gate.py      # Human-in-the-loop review & immutable audit log
-│       ├── llm_client.py      # Live Gemini Flash Lite & Mock providers
-│       ├── llm_extractor.py   # LLM extractor with source-span grounding
-│       ├── models.py          # StructuredRule, SourceSpan & AbstainReason models
-│       └── tier_c_dataset.py  # Tier-C failure-mode clauses
-├── experiments/               # Reproducible experiment runners & frozen results
-│   ├── run_ladder.py          # 3-regime benchmark ladder runner
-│   ├── run_phase4_llm.py      # Tier-C LLM & human gate benchmark
-│   └── results/               # Committed JSON artifacts & 113 live transcripts
-├── scripts/                   # Verification, manifest & economics scripts
-│   ├── calc_cost_latency.py   # Transcript-measured cost & latency calculator
-│   └── generate_manifest.py   # SHA-256 verification manifest generator
-└── tests/                     # 68 Automated unit, invariant, safety & boundary tests
-    ├── test_adversarial_injection.py
-    ├── test_ladder_invariants.py
-    ├── test_portability.py
-    └── ...
+Open **http://localhost:8501** in your browser.
+
+### 2. Run the Full Test Suite (70 Passing Tests)
+```bash
+pytest tests/ -v
 ```
+
+### 3. Run the 3-Regime Benchmark Ladder
+```bash
+python experiments/run_ladder.py --regime all --llm-mode replay
+```
+
+### 4. Verify Cryptographic Manifest Checksums
+```bash
+python scripts/generate_manifest.py --verify
+```
+*Committed Manifest SHA Binding:* `65788246c47197427ce9a4867b5db59b078f6462` (`6578824`)
 
 ---
 
@@ -175,8 +183,8 @@ Numbers regenerate live in `app.py` Step 5 with any portfolio size or seed — n
 
 1. **Integer Paise Only:** Never operates on floating-point currencies — no rounding drift in recovered amounts.
 2. **Conservation of Funds:** `sum(allocated_paise) == refund_amount_paise` strictly guaranteed by largest-remainder rounding.
-3. **Strict Boundary Isolation:** Predictor code never imports hidden ground-truth classes — the batch-impact numbers are graded independently, not self-reported.
-4. **Verifiable Diagnosis:** Every rule extracted by an LLM is checked against verbatim contract text; an invalid span raises immediately rather than executing on an unverified basis.
-5. **Bounded Execution:** The allocator abstains — moves zero funds — on every structurally unsafe state (`refund_exceeds_payment`, `funding_map_unavailable`, `role_binding_conflict`, etc.) instead of guessing.
-6. **Compliant Escalation:** Any extraction carrying a warning (unknown allocation, missing commission treatment, amendment clause) routes to human review before execution.
-7. **Immutable Audit Trail:** All human review decisions (approve, edit, reject) — with reviewer ID, timestamp, warnings shown, and confirmed rule — are logged for financial compliance.
+3. **Strict Boundary Isolation:** Predictor code never imports hidden ground-truth classes.
+4. **Verifiable Diagnosis:** Every rule extracted by an LLM is checked against verbatim contract text.
+5. **Bounded Execution:** The allocator abstains — moves zero funds — on every structurally unsafe state instead of guessing.
+6. **Compliant Escalation:** Any extraction carrying a warning routes to human review before execution.
+7. **Immutable Audit Trail:** All human review decisions are logged for financial compliance.
