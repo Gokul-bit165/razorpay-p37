@@ -8,6 +8,6 @@
     "experiments/results/phase4_llm_extraction.json": "8d97253a9afc3b42fe490222eb4af01c82344741aa9b983e1caad01bdf591114",
     "experiments/results/role_bound_tier_c.json": "b8bcc3057265df8b4bdc6a6b2e86e921a935b6d392ddabbc83bad6869a3cf176"
   },
-  "git_commit_sha": "11d83a997e1070216551defa08f790ebb1e7d566",
+  "git_commit_sha": "2d52804cbda705bdec1881e1733d552b123ea99b",
   "manifest_version": "1.0"
 }
