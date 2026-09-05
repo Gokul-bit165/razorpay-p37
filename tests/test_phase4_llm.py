@@ -86,6 +86,25 @@ class TestLLMClient:
         assert rule.commission_treatment == CommissionTreatment.retained
         assert rule.recovery_order == ("acc_canned_0",)
 
+    def test_transcript_replay_client_fatal_cache_miss(self, tmp_path):
+        from p37.extraction.llm_client import TranscriptReplayClient
+        replay_client = TranscriptReplayClient(mode="replay", cache_dir=tmp_path)
+        with pytest.raises(RuntimeError, match="Fatal: Replay cache miss"):
+            replay_client.generate_structured("sys_prompt", "unrecorded_user_prompt")
+
+    def test_transcript_record_and_replay_roundtrip(self, tmp_path):
+        from p37.extraction.llm_client import TranscriptReplayClient, MockLLMClient
+        mock = MockLLMClient()
+        recorder = TranscriptReplayClient(mode="record", cache_dir=tmp_path, underlying_client=mock)
+        resp1 = recorder.generate_structured("sys", "Refund allocation agreement:\nNon-line refund rule: proportional.")
+
+        # Replay client should now succeed on this prompt
+        replayer = TranscriptReplayClient(mode="replay", cache_dir=tmp_path)
+        resp2 = replayer.generate_structured("sys", "Refund allocation agreement:\nNon-line refund rule: proportional.")
+        assert resp1 == resp2
+        assert resp2["nonline_allocation"] == "proportional"
+
+
 
 # ── 2. Tier-C Linguistic Extraction Tests ─────────────────────────────────────
 

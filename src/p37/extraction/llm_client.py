@@ -12,6 +12,7 @@ import json
 import os
 import re
 from abc import ABC, abstractmethod
+from pathlib import Path
 from typing import Any, Mapping, Optional
 
 
@@ -329,16 +330,24 @@ class MockLLMClient(LLMClient):
 class GeminiLLMClient(LLMClient):
     """Client for Google Generative AI (Gemini)."""
 
-    def __init__(self, api_key: Optional[str] = None, model_name: str = "gemini-1.5-flash"):
+    def __init__(self, api_key: Optional[str] = None, model_name: str = "gemini-2.5-flash"):
         self.api_key = api_key or os.environ.get("GEMINI_API_KEY")
         if not self.api_key:
             raise ValueError("GEMINI_API_KEY is not set.")
         import google.generativeai as genai
         genai.configure(api_key=self.api_key)
-        self.model = genai.GenerativeModel(
-            model_name=model_name,
-            generation_config={"response_mime_type": "application/json"}
-        )
+        self.model_name = model_name
+        try:
+            self.model = genai.GenerativeModel(
+                model_name=model_name,
+                generation_config={"response_mime_type": "application/json"}
+            )
+        except Exception:
+            # Fallback to gemini-2.0-flash if SDK is on earlier release
+            self.model = genai.GenerativeModel(
+                model_name="gemini-2.0-flash",
+                generation_config={"response_mime_type": "application/json"}
+            )
 
     def generate_structured(self, system_prompt: str, user_prompt: str) -> dict[str, Any]:
         prompt = f"{system_prompt}\n\nInput Agreement Text:\n{user_prompt}"
@@ -369,3 +378,108 @@ class OpenAILLMClient(LLMClient):
         )
         content = response.choices[0].message.content or "{}"
         return json.loads(content)
+
+
+class TranscriptReplayClient(LLMClient):
+    """
+    Transcript cache client supporting 'replay', 'record', and 'mock' modes.
+
+    In 'replay' mode (default for audited benchmarks), a cache miss raises a
+    fatal RuntimeError to ensure zero un-audited or silently fabricated calls.
+    """
+
+    def __init__(
+        self,
+        mode: str = "replay",
+        cache_dir: Optional[Path | str] = None,
+        underlying_client: Optional[LLMClient] = None,
+        model_name: str = "gemini-2.5-flash",
+    ):
+        import hashlib
+        self.mode = mode.lower().strip()
+        self.cache_dir = Path(cache_dir) if cache_dir else Path(__file__).resolve().parents[3] / "experiments" / "transcripts"
+        self.underlying_client = underlying_client
+        self.model_name = model_name
+        self._hashlib = hashlib
+
+    def _prompt_hash(self, system_prompt: str, user_prompt: str) -> str:
+        combined = f"{self.model_name}:::{system_prompt}:::{user_prompt}"
+        return self._hashlib.sha256(combined.encode("utf-8")).hexdigest()
+
+    def generate_structured(self, system_prompt: str, user_prompt: str) -> dict[str, Any]:
+        phash = self._prompt_hash(system_prompt, user_prompt)
+        cache_file = self.cache_dir / f"{phash}.json"
+
+        if self.mode == "replay":
+            if not cache_file.exists():
+                raise RuntimeError(
+                    f"Fatal: Replay cache miss for prompt hash {phash} (model: {self.model_name}). "
+                    f"In locked benchmark replay mode, all LLM calls must have verified transcripts. "
+                    f"Run with an active API key in record mode to refresh the replay cache."
+                )
+            data = json.loads(cache_file.read_text(encoding="utf-8"))
+            return data["response"]
+
+        elif self.mode == "record":
+            if not self.underlying_client:
+                raise ValueError("underlying_client must be provided in record mode.")
+            import time
+            t0 = time.perf_counter()
+            resp = self.underlying_client.generate_structured(system_prompt, user_prompt)
+            duration_ms = round((time.perf_counter() - t0) * 1000, 2)
+
+            self.cache_dir.mkdir(parents=True, exist_ok=True)
+            record_data = {
+                "prompt_hash": phash,
+                "model": self.model_name,
+                "latency_ms": duration_ms,
+                "system_prompt": system_prompt,
+                "user_prompt": user_prompt,
+                "response": resp,
+            }
+            cache_file.write_text(json.dumps(record_data, indent=2, sort_keys=True), encoding="utf-8")
+            return resp
+
+        elif self.mode == "mock":
+            client = self.underlying_client or MockLLMClient()
+            return client.generate_structured(system_prompt, user_prompt)
+
+        else:
+            raise ValueError(f"Unknown TranscriptReplayClient mode: {self.mode}. Use 'replay', 'record', or 'mock'.")
+
+
+def create_llm_client(
+    mode: str = "mock",
+    model_name: str = "gemini-2.5-flash",
+    cache_dir: Optional[Path | str] = None,
+) -> LLMClient:
+    """
+    Factory creating the appropriate LLM client based on requested mode.
+    Modes:
+      - 'mock': Deterministic MockLLMClient.
+      - 'live': Real Gemini client (requires GEMINI_API_KEY).
+      - 'record': Executes live Gemini calls and writes verified transcripts.
+      - 'replay': Reads strictly from disk cache; fails fatally on miss.
+    """
+    mode_clean = mode.lower().strip()
+    if mode_clean == "mock":
+        return MockLLMClient()
+    elif mode_clean == "live":
+        return GeminiLLMClient(model_name=model_name)
+    elif mode_clean == "record":
+        live_client = GeminiLLMClient(model_name=model_name)
+        return TranscriptReplayClient(
+            mode="record",
+            cache_dir=cache_dir,
+            underlying_client=live_client,
+            model_name=model_name,
+        )
+    elif mode_clean == "replay":
+        return TranscriptReplayClient(
+            mode="replay",
+            cache_dir=cache_dir,
+            model_name=model_name,
+        )
+    else:
+        raise ValueError(f"Unknown LLM client mode: {mode}. Supported: mock, live, record, replay.")
+
