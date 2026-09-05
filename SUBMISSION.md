@@ -192,4 +192,4 @@ streamlit run app.py
 
 **Committed Git Manifest Binding:**  
 All numbers in this submission correspond to the cryptographic SHA-256 manifest in `experiments/results/RESULTS_MANIFEST.json` bound to Git commit:  
-`4f1ea8c4ebd6cc7382f49231d8e92f8e5c921365` (`4f1ea8c`)
+`65788246c47197427ce9a4867b5db59b078f6462` (`6578824`)
