@@ -12,6 +12,7 @@ Provides:
 """
 from __future__ import annotations
 
+import hashlib
 import uuid
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
@@ -88,8 +89,11 @@ class HumanConfirmationGate:
         if "AMENDMENT:" in agreement_text:
             warnings.append("Agreement text contains amendment clauses overriding base terms.")
 
+        # Deterministic request ID based on agreement text and extracted fields
+        stable_sig = f"{agreement_text}:{extracted_rule.nonline_allocation.value}:{extracted_rule.commission_treatment.value}"
+        stable_id = hashlib.sha256(stable_sig.encode("utf-8")).hexdigest()[:8]
         req = ConfirmationRequest(
-            request_id=f"req_{uuid.uuid4().hex[:8]}",
+            request_id=f"req_{stable_id}",
             agreement_text=agreement_text,
             extracted_rule=extracted_rule,
             warnings=warnings,

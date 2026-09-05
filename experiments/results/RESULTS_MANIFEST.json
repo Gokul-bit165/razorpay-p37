@@ -120,9 +120,9 @@
     "experiments/results/llm_transcripts/fd6aae0cf09d8c91bf9af9ce5e5ac40c1c805d44121fb7c421d044b99be7e7e7.json": "b32e5926e526ed53a11268b697009b70bdeb6ab1e820ca03944b75789c98edc7",
     "experiments/results/llm_transcripts/fe3aef1fb9a3501fca7810fe9f6c8a0a9604791f1cd1753b115abed70789c1c4.json": "6126f27df02e159315b6e0cf54d53dcbd21d6cab0dfafef2ee9e5a7a5e5b8b10",
     "experiments/results/llm_transcripts/ff143f369ec9c0e258d61641c074b1290a83e2329de09f66d2bd8e39b676981a.json": "247c2c9bd4b1ddbf93e3134a1ff14b79fac187363b88f2364c659cb01b19e45e",
-    "experiments/results/phase4_llm_extraction.json": "9dcaf15ad295d4df4519b98655cb1b290d369b7050a2539952a8085a2442eb86",
+    "experiments/results/phase4_llm_extraction.json": "d5e82071e71b0a0ef0ee39b5f5df1e6dbb0c4e21a7a33e4633f1f8dd0fd68896",
     "experiments/results/role_bound_tier_c.json": "b8bcc3057265df8b4bdc6a6b2e86e921a935b6d392ddabbc83bad6869a3cf176"
   },
-  "git_commit_sha": "a24e425ffcd498183f518b6fd0c976a964921538",
+  "git_commit_sha": "794bba800c98d550b777901f874015aa9624b7a8",
   "manifest_version": "1.0"
 }

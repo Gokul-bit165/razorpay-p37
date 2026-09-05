@@ -13,7 +13,7 @@
         "clause_id": "tc_ctrl_01",
         "confirmed_abstain": false,
         "confirmed_nonline": "proportional",
-        "request_id": "req_e682042c",
+        "request_id": "req_b64d3f5a",
         "reviewer_id": "reviewer_alice",
         "warnings_count": 0
       },
@@ -22,7 +22,7 @@
         "clause_id": "tc_ctrl_02",
         "confirmed_abstain": false,
         "confirmed_nonline": "shipping_funder",
-        "request_id": "req_92ededf4",
+        "request_id": "req_d4f68139",
         "reviewer_id": "reviewer_bob",
         "warnings_count": 0
       },
@@ -31,7 +31,7 @@
         "clause_id": "tc_syn_01",
         "confirmed_abstain": false,
         "confirmed_nonline": "proportional",
-        "request_id": "req_443004a6",
+        "request_id": "req_851d05f4",
         "reviewer_id": "reviewer_carol",
         "warnings_count": 0
       },
@@ -40,7 +40,7 @@
         "clause_id": "tc_syn_02",
         "confirmed_abstain": false,
         "confirmed_nonline": "platform_absorbs",
-        "request_id": "req_60762a3d",
+        "request_id": "req_f2982155",
         "reviewer_id": "reviewer_dave",
         "warnings_count": 0
       },
@@ -49,7 +49,7 @@
         "clause_id": "tc_syn_03",
         "confirmed_abstain": false,
         "confirmed_nonline": "discount_funder",
-        "request_id": "req_b0739273",
+        "request_id": "req_f7546b83",
         "reviewer_id": "reviewer_dave",
         "warnings_count": 0
       }
