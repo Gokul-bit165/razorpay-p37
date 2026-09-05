@@ -11,9 +11,43 @@
 
 **Problem P37:** Partial-refund allocation and clawback on split payments where contract-specific bearing rules differ from proportional/default handling — one of the quietest and most common ways multi-vendor platforms leak revenue: money silently pulled from the *wrong* linked account, or never recovered from the *right* one.
 
-📖 **Read the Complete Official Submission:** [SUBMISSION.md](SUBMISSION.md)
-🔍 **Read the Model Audit & Provenance Report:** [FINDINGS.md](FINDINGS.md)
-🎬 **View the 3-Minute Demo Video Script:** [DEMO_SCRIPT.md](DEMO_SCRIPT.md)
+📖 **Read the Complete Official Submission:** [SUBMISSION.md](SUBMISSION.md)  
+🔍 **Read the Model Audit & Provenance Report:** [FINDINGS.md](FINDINGS.md)  
+🎬 **View the 3-Minute Demo Video Script:** [DEMO_SCRIPT.md](DEMO_SCRIPT.md)  
+🎥 **Watch the Pitch & Demo Video:** [0905.mp4](0905.mp4)
+
+---
+
+## 🎥 Pitch Video & Demo Walkthrough
+
+> 🎬 **Watch the full 3-minute presentation:** [0905.mp4](0905.mp4)  
+> *Shot-by-shot narration and timing script available in [DEMO_SCRIPT.md](DEMO_SCRIPT.md).*
+
+---
+
+## 📸 System Screenshots & UI Walkthrough
+
+The interactive simulator (`streamlit run app.py`) implements a 5-step guided narrative demonstrating root-cause diagnosis, human oversight, integer-paise conservation, and bulk portfolio revenue recovery.
+
+### 1. Verbatim Source-Span Grounding (Step 2)
+*Extracts typed structured rules from legal agreements while strictly binding every attribute to character-level verbatim source spans in the contract text (0.0% hallucinations):*
+
+![Step 2: Source-Span Grounding and Verbatim Verification](docs/assets/demo_clause_grounding.png)
+
+### 2. Portfolio-Scale Revenue Recovery (Step 5 At Scale)
+*Evaluates the deterministic recovery engine across 2,900 generated split-payment refund cases totaling ₹312,839 in refund volume, preventing ₹69,020 in naive-logic merchant balance overcharges:*
+
+![Step 5: Bulk Portfolio Impact Simulation](docs/assets/demo_portfolio_simulation.png)
+
+### 3. Misallocation Prevented by Category & Worst-Case Overcharges
+*Quantifies unfair balance erosion across 21 real-world case types, highlighting the specific merchants protected from wrongful clawbacks:*
+
+![Step 5: Category Misallocation Breakdown and Worst Overcharges](docs/assets/demo_category_impact_charts.png)
+
+### 4. Raw Per-Case Audit & Simulation Drilldown
+*Full transparency into every simulated transaction, comparing naive deduction vs. contract-aware truth:*
+
+![Step 5: Per-Case Simulation Drilldown and Verification Output](docs/assets/demo_simulation_drilldown.png)
 
 ---
 

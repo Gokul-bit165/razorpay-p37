@@ -186,9 +186,12 @@ python scripts/calc_cost_latency.py
 # 4. Verify cryptographic manifest binding against repository HEAD
 python scripts/generate_manifest.py --verify
 
-# 5. Launch the interactive 4-step settlement simulator
+# 5. Launch the interactive 5-step settlement simulator
 streamlit run app.py
 ```
+
+**Pitch & Demo Video (3 Min):**  
+Committed video walkthrough: [`0905.mp4`](0905.mp4) (Shot-by-shot script in [DEMO_SCRIPT.md](DEMO_SCRIPT.md)).
 
 **Committed Git Manifest Binding:**  
 All numbers in this submission correspond to the cryptographic SHA-256 manifest in `experiments/results/RESULTS_MANIFEST.json` bound to Git commit:  
